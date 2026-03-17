@@ -183,7 +183,7 @@
       <div class="orari-card reveal">
         <div class="orari-row">
           <span class="orari-day">Lunedì – Domenica</span>
-          <span class="orari-time">Ore 7 - 24</span>
+          <span class="orari-time">H24</span>
         </div>
         <div class="orari-divider"></div>
         <div class="orari-badge-wrap">
@@ -588,9 +588,31 @@
     .cp-send svg { width:15px;height:15px;stroke:currentColor; }
 
     @media(max-width:480px){
-      #chat-popup { width: calc(100vw - 32px); right:16px; bottom:96px; }
-      #chat-fab { bottom:20px; right:16px; }
-      .cp-sugg-grid { grid-template-columns: 1fr; }
+      #chat-popup {
+        width: calc(100vw - 24px);
+        right: 12px;
+        bottom: 90px;
+        max-height: 82vh;
+      }
+      #chat-fab { bottom:16px; right:14px; }
+      .cp-messages { height: 210px; }
+      .cp-suggestions { padding: 5px 10px 9px; }
+      .cp-sugg-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 7px;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .cp-sugg-grid::-webkit-scrollbar { display: none; }
+      .cp-sugg-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-size: 0.68rem;
+        padding: 6px 10px;
+      }
     }
   </style>
 
@@ -646,7 +668,7 @@
         { icon:"🎉", q:"Socializzare?",       a:"Certo! Serate, giochi, workshop." },
         { icon:"📋", q:"Sale riunioni?",      a:"Sì, prenotabili su richiesta." },
         { icon:"💬", q:"Contatti?",           a:"WhatsApp +39 320 696 6688, IG @villab_villacarcina." },
-        { icon:"📍", q:"Dove siamo?",         a:"Mansarda biblioteca, Villa Carcina." }
+        { icon:"📍", q:"Dove siamo?",         a:"Mansarda biblioteca, Via XX Settembre, 22 – Villa Carcina (BS)." }
       ];
 
       const fab      = document.getElementById('chat-fab');
