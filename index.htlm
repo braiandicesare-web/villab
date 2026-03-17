@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset = "UTF-8">
+</head>
+<body>
+<img src = "C:\Users\rugby\OneDrive\Desktop\WEb-Ai-codice\Img\logo.png" width="150">
+
+<h1>Villab | Accendi il tuo potenziale 🚀 </h1> 
+<p> Cerchi il posto giusto per dare una svolta alla tua produttività? La nuova aula studio di Villa Carcina ti aspetta! 
+Che tu debba preparare un esame, gestire il tuo lavoro da freelance o semplicemente leggere in tranquillità, qui trovi lo spazio perfetto.
+Un ambiente moderno, aperto a tutti e pensato per connettere le persone. Porta il tuo laptop, il tuo caffè e la voglia di fare: 
+il clima è quello giusto, l’energia anche. Vieni a trovarci!. </p>
+
+<img src = "C:\Users\rugby\OneDrive\Desktop\WEb-AI-codice\Img\Hero.png" width="600" height ="800" >
+<p>Dimentica la distrazione di casa: in Villab trovi la carica di un ambiente moderno, 
+Wi-Fi veloce e la compagnia giusta per trasformare ogni ora di studio o lavoro in un successo. 
+Il tuo spazio, la tua energia.</p>
+
+<a href = "https://www.instagram.com/reel/DUQndAqjKdj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==">Guarda il video</a>
+
+<iframe width = "560"height = "315"
+src = "https://www.instagram.com/reel/DUQndAqjKdj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+frameborder = "0"
+allowfullscreeen> </iframe>
+</body>
+</html>
