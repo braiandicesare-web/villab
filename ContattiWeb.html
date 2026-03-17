@@ -3,100 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Villab – Contatti</title>
+  <title>Villab – Servizi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styleWeb.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="images/logo.png" />
-  <style>
-    /* ---- Layout canali: griglia sinistra/destra ---- */
-    .ct-channels-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: stretch;
-    }
-    .ct-channels-left {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-    .ct-channels-left .ct-channel-card {
-      flex: 1;
-    }
-    .ct-channel-card--qr {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      height: 100%;
-    }
-    .ct-qr-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 8px 0;
-    }
-    .ct-qr-body h3 { margin: 0; }
-    .ct-qr-body p  { margin: 0; }
-    .ct-qr-img-wrap {
-      width: 100%;
-      max-width: 260px;
-      margin: 8px auto;
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    #ct-qrcode canvas, #ct-qrcode img {
-      display: block;
-      border-radius: 4px;
-    }
-    .ct-qr-label {
-      font-size: 13px;
-      opacity: 0.6;
-      letter-spacing: 0.03em;
-    }
-    @media (max-width: 768px) {
-      .ct-channels-grid { grid-template-columns: 1fr; }
-      .ct-channel-card--qr { height: auto; }
-    }
-
-    /* ---- Form validation styles ---- */
-    .ct-input-error {
-      border-color: #e24b4a !important;
-      outline: none;
-    }
-    .ct-field-error {
-      display: block;
-      margin-top: 4px;
-      font-size: 12px;
-      color: #e24b4a;
-    }
-    #ct-success-banner {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #eaf3de;
-      color: #3b6d11;
-      border: 1px solid #97c459;
-      border-radius: 8px;
-      padding: 14px 20px;
-      margin-bottom: 20px;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    #ct-success-banner i {
-      font-size: 18px;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styleWeb.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
   <!-- Cursore personalizzato -->
@@ -105,225 +18,206 @@
 
   <!-- ====== NAVIGAZIONE ====== -->
   <nav>
-    <a href="IndexHome.html">
+    <a href="index.html">
       <img src="images/logo.png" alt="Villab Logo" class="nav-logo" />
     </a>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
     <div class="nav-menu" id="navMenu">
-      <a href="IndexHome.html">Home</a>
+      <a href="index.html">Home</a>
       <a href="chiSiamoWeb.html">Chi Siamo</a>
-      <a href="serviziWeb.html">Servizi</a>
-      <a href="ContattiWeb.html" class="nav-active">Contatti</a>
+      <a href="serviziWeb.html" class="nav-active">Servizi</a>
+      <a href="ContattiWeb.html">Contatti</a>
       <a href="ContattiWeb.html" class="nav-cta">Prenota il tuo posto</a>
     </div>
   </nav>
 
-  <!-- ====== HERO ====== -->
-  <section class="ct-hero">
-    <div class="ct-hero-bg"></div>
-    <div class="ct-hero-dots"></div>
-    <div class="ct-hero-content">
-      <span class="hero-badge">💬 Parliamo</span>
-      <h1>Contatti<em>.</em></h1>
-      <div class="ct-hero-divider"></div>
-      <p class="ct-hero-sub">Scrivici su Instagram o WhatsApp, oppure lasciaci un messaggio: ti risponderemo al più presto.</p>
+  <!-- ====== HERO TITLE ====== -->
+  <section class="sv-hero">
+    <div class="sv-hero-bg"></div>
+    <div class="sv-hero-dots"></div>
+    <div class="sv-hero-content">
+      <span class="hero-badge">⚡ Cosa offriamo</span>
+      <h1>I nostri <em>Servizi</em></h1>
+      <div class="sv-hero-divider"></div>
+      <p class="sv-hero-sub">Tutto quello che ti serve per studiare, crescere e connetterti</p>
     </div>
   </section>
 
-  <!-- ====== CANALI DIRETTI ====== -->
-  <section class="ct-channels-section">
-    <div class="ct-channels-bg"></div>
-    <div class="ct-channels-inner ct-channels-grid">
+  <!-- ====== MAIN CONTENT ====== -->
+  <main>
 
-      <!-- Colonna sinistra: Instagram + WhatsApp impilate -->
-      <div class="ct-channels-left">
-
-        <div class="ct-channel-card reveal">
-          <div class="ct-channel-icon ct-icon--ig">
-            <i class="fab fa-instagram"></i>
+    <!-- ====== CATEGORIA 1: SPAZIO STUDIO ====== -->
+    <section class="sv-category-section sv-cat--dark" id="spazio-studio">
+      <div class="sv-category-inner">
+        <div class="sv-category-header reveal">
+          <div class="sv-cat-badge">
+            <span class="sv-cat-icon">📚</span>
+            <span class="hero-badge" style="margin-bottom:0;">Spazio Studio</span>
           </div>
-          <div class="ct-channel-body">
-            <h3>Scrivici su Instagram</h3>
-            <p>Seguici e mandaci un messaggio diretto. Troverai aggiornamenti sugli eventi, novità e tanti contenuti dalla community Villab.</p>
-            <a href="https://www.instagram.com/villab_villacarcina?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="ct-channel-btn ct-btn--ig">
-              <i class="fab fa-instagram"></i> Vai al profilo
-            </a>
-          </div>
+          <h2>Studia in un ambiente<br><em>pensato per te</em></h2>
+          <p class="sv-cat-desc">Postazioni confortevoli, silenzio e connettività: tutto ciò di cui hai bisogno per dare il massimo.</p>
         </div>
 
-        <div class="ct-channel-card reveal">
-          <div class="ct-channel-icon ct-icon--wa">
-            <i class="fab fa-whatsapp"></i>
+        <div class="sv-items-grid">
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🪑</div>
+            <div class="sv-item-body">
+              <h3>Postazioni studio individuali prenotabili</h3>
+              <p>Prenota il tuo posto in anticipo e trova sempre la tua scrivania pronta. Ogni postazione è dotata di presa elettrica e luce adeguata per lunghe sessioni di studio.</p>
+            </div>
           </div>
-          <div class="ct-channel-body">
-            <h3>Scrivici su WhatsApp</h3>
-            <p>Per una risposta rapida puoi contattarci direttamente su WhatsApp. Siamo disponibili per qualsiasi domanda su Villab, badge e prenotazioni.</p>
-            <a href="https://wa.me/393206966688" target="_blank" rel="noopener noreferrer" class="ct-channel-btn ct-btn--wa">
-              <i class="fab fa-whatsapp"></i> Scrivici su WhatsApp
-            </a>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">📶</div>
+            <div class="sv-item-body">
+              <h3>Wi-Fi ad alta velocità</h3>
+              <p>Connessione stabile e veloce inclusa nell'accesso. Perfetta per videolezioni, ricerche e download di materiale didattico senza interruzioni.</p>
+            </div>
           </div>
-        </div>
-
-      </div>
-
-      <!-- Colonna destra: Card QR Code -->
-      <div class="ct-channel-card ct-channel-card--qr reveal">
-        <div class="ct-qr-body">
-          <h3>Iscriviti a Villab</h3>
-          <p>Scannerizza il codice con la fotocamera del tuo smartphone, compila il modulo e ottieni il badge per accedere agli spazi.</p>
-          <div class="ct-qr-img-wrap">
-            <div id="ct-qrcode"></div>
-          </div>
-          <span class="ct-qr-label">Modulo di iscrizione</span>
         </div>
       </div>
+    </section>
 
-    </div>
-  </section>
+    <!-- ====== CATEGORIA 2: COMMUNITY & EVENTI ====== -->
+    <section class="sv-category-section sv-cat--alt" id="community-eventi">
+      <div class="sv-category-inner">
+        <div class="sv-category-header reveal">
+          <div class="sv-cat-badge">
+            <span class="sv-cat-icon">🤝</span>
+            <span class="hero-badge" style="margin-bottom:0;">Community &amp; Eventi</span>
+          </div>
+          <h2>Connettiti, impara,<br><em>fai rete</em></h2>
+          <p class="sv-cat-desc">Villab non è solo studio: è una community viva, fatta di giovani che si incontrano, collaborano e crescono insieme.</p>
+        </div>
 
-  <!-- ====== FAQ ====== -->
-  <section class="ct-faq-section">
-    <div class="ct-faq-bg"></div>
-    <div class="ct-faq-inner">
-
-      <div class="ct-faq-header reveal">
-        <span class="hero-badge"><span>✦</span> Domande frequenti</span>
-        <h2>Hai qualche<br><em>dubbio</em></h2>
-        <p class="ct-faq-sub">Abbiamo raccolto le risposte alle domande più comuni su Villab.</p>
+        <div class="sv-items-grid sv-items-grid--4">
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🎬</div>
+            <div class="sv-item-body">
+              <h3>Serate film e giochi da tavolo</h3>
+              <p>Momenti di svago organizzati per staccare dai libri e divertirsi insieme. Perché stare bene è parte del percorso.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🛠️</div>
+            <div class="sv-item-body">
+              <h3>Workshop e laboratori</h3>
+              <p>Attività pratiche organizzate dai giovani del progetto Villab: dalla creatività alla tecnologia, sempre con uno spirito di condivisione.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">💼</div>
+            <div class="sv-item-body">
+              <h3>Incontri di networking</h3>
+              <p>Opportunità di connessione tra giovani ed esperti del territorio. Costruisci relazioni che vanno oltre l'aula.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">📌</div>
+            <div class="sv-item-body">
+              <h3>Bacheca digitale/fisica</h3>
+              <p>Cerca compagni di studio o collaboratori attraverso la nostra bacheca. Condividi progetti, trova sinergie e costruisci qualcosa di nuovo insieme.</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="ct-faq-list ct-faq-grid">
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Cos'è Villab?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Villab è uno spazio dedicato ai giovani tra i 18 e i 35 anni dove studiare, incontrarsi e condividere idee. È un'aula studio, ma anche un luogo di socializzazione dove partecipare ad attività, guardare film, giocare e creare nuove connessioni.</p>
+    <!-- ====== CATEGORIA 3: SPAZI FLESSIBILI ====== -->
+    <section class="sv-category-section sv-cat--dark" id="spazi-flessibili">
+      <div class="sv-category-inner">
+        <div class="sv-category-header reveal">
+          <div class="sv-cat-badge">
+            <span class="sv-cat-icon">🏛️</span>
+            <span class="hero-badge" style="margin-bottom:0;">Spazi Flessibili</span>
           </div>
+          <h2>Spazi che si adattano<br><em>alle tue esigenze</em></h2>
+          <p class="sv-cat-desc">Che tu debba studiare in gruppo, fare una riunione o presentare un progetto, Villab ha lo spazio giusto per ogni occasione.</p>
         </div>
 
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Chi può accedere a Villab?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Villab è aperto a tutti i giovani tra i 18 e i 35 anni che cercano un ambiente tranquillo per studiare o uno spazio dove incontrare altri giovani e partecipare ad attività sociali e culturali.</p>
+        <div class="sv-items-grid">
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🗓️</div>
+            <div class="sv-item-body">
+              <h3>Sale riunioni prenotabili</h3>
+              <p>Perfette per gruppi di studio, riunioni di associazioni o sessioni di lavoro collaborativo. Prenota in anticipo e organizza il tuo tempo senza stress.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🛋️</div>
+            <div class="sv-item-body">
+              <h3>Angolo relax</h3>
+              <p>Un'area separata dall'area studio per ricaricarsi tra una sessione e l'altra. Perché le pause fanno parte di un metodo di studio efficace.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🎤</div>
+            <div class="sv-item-body">
+              <h3>Spazio presentazioni ed eventi</h3>
+              <p>Dotato di LIM, ideale per presentazioni, piccoli eventi e proiezioni. Uno spazio versatile che si trasforma in base alle tue necessità.</p>
+            </div>
           </div>
         </div>
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Villab è solo un'aula studio?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>No. Villab nasce come aula studio e centro di incontro giovanile. Oltre allo studio, è uno spazio dove socializzare, organizzare attività, partecipare a serate film o giochi da tavolo e conoscere nuove persone.</p>
-          </div>
-        </div>
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Posso venire a studiare quando voglio?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Sì, negli orari di apertura puoi utilizzare l'aula studio liberamente. In caso di grande affluenza, potrebbe essere richiesta una registrazione o prenotazione del posto.</p>
-          </div>
-        </div>
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>È possibile prenotare uno spazio per riunioni o attività?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Sì. Alcune stanze possono essere prenotate su richiesta per riunioni, incontri di associazioni, gruppi di studio o attività organizzate dai giovani.</p>
-          </div>
-        </div>
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Villab organizza eventi?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Sì. Durante l'anno verranno organizzati eventi, serate film, giochi da tavolo, incontri e attività culturali, pensati per favorire la socializzazione e lo scambio di idee tra giovani.</p>
-          </div>
-        </div>
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Posso proporre un'attività o un evento?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Certamente. Villab incoraggia la partecipazione attiva dei giovani. Se hai un'idea per un evento, un laboratorio o un'attività, puoi contattarci per proporla.</p>
-          </div>
-        </div>
-
-        <div class="ct-faq-item reveal">
-          <button class="ct-faq-btn" aria-expanded="false">
-            <span>Posso usare Villab per il mio gruppo di studio o associazione?</span>
-            <span class="ct-faq-icon">+</span>
-          </button>
-          <div class="ct-faq-ans">
-            <p>Sì. Villab è pensato anche come spazio di incontro e collaborazione per gruppi di studio, associazioni giovanili e piccoli progetti condivisi.</p>
-          </div>
-        </div>
-
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ====== FORM CONTATTI ====== -->
-  <section class="ct-form-section">
-    <div class="ct-form-bg"></div>
-    <div class="ct-form-dots"></div>
-    <div class="ct-form-inner">
+    <!-- ====== CATEGORIA 4: SERVIZI PRATICI ====== -->
+    <section class="sv-category-section sv-cat--alt" id="servizi-pratici">
+      <div class="sv-category-inner">
+        <div class="sv-category-header reveal">
+          <div class="sv-cat-badge">
+            <span class="sv-cat-icon">⚙️</span>
+            <span class="hero-badge" style="margin-bottom:0;">Servizi Pratici</span>
+          </div>
+          <h2>Ogni comfort,<br><em>a portata di mano</em></h2>
+          <p class="sv-cat-desc">I piccoli dettagli fanno la differenza. Abbiamo pensato a tutto per rendere la tua giornata a Villab il più piacevole possibile.</p>
+        </div>
 
-      <div class="ct-form-header reveal">
-        <span class="hero-badge"><span>✦</span> Scrivici</span>
-        <h2>Lasciaci un<br><em>messaggio</em></h2>
-        <p class="ct-form-sub">Compila il modulo e ti risponderemo nel più breve tempo possibile.</p>
+        <div class="sv-items-grid">
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">☕</div>
+            <div class="sv-item-body">
+              <h3>Caffetteria e distributori automatici</h3>
+              <p>Snack, caffè e bevande sempre disponibili. Nessuna scusa per non affrontare la sessione di studio con la giusta energia.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🚲</div>
+            <div class="sv-item-body">
+              <h3>Spazio biciclette e monopattini</h3>
+              <p>Vieni in modo sostenibile: abbiamo uno spazio dedicato per lasciare in sicurezza bici e monopattini durante la tua permanenza.</p>
+            </div>
+          </div>
+          <div class="sv-item-card reveal">
+            <div class="sv-item-icon">🔌</div>
+            <div class="sv-item-body">
+              <h3>Locker per dispositivi in carica</h3>
+              <p>Lascia il tuo telefono o tablet in carica in sicurezza mentre studi. I tuoi dispositivi ti aspetteranno pronti quando ne avrai bisogno.</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <form class="ct-form reveal" id="ctForm" novalidate>
-        <div class="ct-form-row">
-          <div class="ct-form-group">
-            <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Il tuo nome" required />
-          </div>
-          <div class="ct-form-group">
-            <label for="cognome">Cognome</label>
-            <input type="text" id="cognome" name="cognome" placeholder="Il tuo cognome" required />
-          </div>
-        </div>
-        <div class="ct-form-row">
-          <div class="ct-form-group">
-            <label for="email">E-mail</label>
-            <input type="email" id="email" name="email" placeholder="La tua email" required />
-          </div>
-          <div class="ct-form-group">
-            <label for="telefono">Numero di telefono</label>
-            <input type="tel" id="telefono" name="telefono" placeholder="+39 000 000 0000" />
-          </div>
-        </div>
-        <div class="ct-form-group ct-form-group--full">
-          <label for="messaggio">Messaggio</label>
-          <textarea id="messaggio" name="messaggio" rows="6" placeholder="Scrivi qui il tuo messaggio..." required></textarea>
-        </div>
-        <div class="ct-form-submit">
-          <button type="submit" class="btn-main">
-            <i class="fas fa-paper-plane" style="margin-right:9px;"></i>Invia il messaggio
-          </button>
-        </div>
-      </form>
+  </main>
 
+  <!-- ====== CTA FINALE ====== -->
+  <section class="sv-cta-section">
+    <div class="sv-cta-bg"></div>
+    <div class="sv-cta-dots"></div>
+    <div class="sv-cta-inner reveal">
+      <span class="hero-badge">🚀 Entra a far parte di Villab</span>
+      <h2>Iscriviti alla<br>comunità <em>Villab</em></h2>
+      <p>Prenota il tuo badge, scegli il tuo spazio e inizia a fare parte di una community giovane, attiva e in continua crescita. L'accesso è gratuito.</p>
+      <div class="sv-cta-btns">
+        <a href="ContattiWeb.html" class="btn-main">
+          <i class="fas fa-id-badge" style="margin-right:9px;"></i>Iscriviti ora
+        </a>
+        <a href="https://www.instagram.com/villab_villacarcina" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+          <i class="fab fa-instagram" style="margin-right:9px;"></i>Seguici su Instagram
+        </a>
+      </div>
     </div>
   </section>
 
@@ -335,15 +229,15 @@
   <!-- ====== FOOTER ====== -->
   <footer>
     <div class="footer-container">
-      <a href="IndexHome.html">
+      <a href="index.html">
         <img src="images/logo.png" alt="Villab Logo" class="footer-logo" />
       </a>
 
       <div class="footer-nav">
-        <a href="IndexHome.html">Home</a>
+        <a href="index.html">Home</a>
         <a href="chiSiamoWeb.html">Chi Siamo</a>
-        <a href="ServiziWeb.html">Servizi</a>
-        <a href="ContattiWeb.html" class="footer-nav-active">Contatti</a>
+        <a href="ServiziWeb.html" class="footer-nav-active">Servizi</a>
+        <a href="ContattiWeb.html">Contatti</a>
       </div>
 
       <div class="footer-info">
@@ -387,22 +281,6 @@
       });
     });
 
-    // FAQ accordion
-    document.querySelectorAll('.ct-faq-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.closest('.ct-faq-item');
-        const isOpen = item.classList.contains('open');
-        document.querySelectorAll('.ct-faq-item').forEach(i => {
-          i.classList.remove('open');
-          i.querySelector('.ct-faq-btn').setAttribute('aria-expanded', 'false');
-        });
-        if (!isOpen) {
-          item.classList.add('open');
-          btn.setAttribute('aria-expanded', 'true');
-        }
-      });
-    });
-
     // Scroll reveal
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -411,73 +289,10 @@
           revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    // ---- FORM CONTATTI ----
-    const form = document.getElementById('ctForm');
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      let valid = true;
-
-      // Rimuovi errori precedenti
-      form.querySelectorAll('.ct-field-error').forEach(el => el.remove());
-      form.querySelectorAll('input, textarea').forEach(el => el.classList.remove('ct-input-error'));
-
-      // Validazione campi required
-      form.querySelectorAll('[required]').forEach(field => {
-        if (!field.value.trim()) {
-          showError(field, 'Questo campo è obbligatorio.');
-          valid = false;
-        }
-      });
-
-      // Validazione email
-      const email = form.querySelector('#email');
-      if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-        showError(email, 'Inserisci un indirizzo email valido.');
-        valid = false;
-      }
-
-      if (!valid) return;
-
-      // Successo
-      showSuccess();
-      form.reset();
-    });
-
-    function showError(field, msg) {
-      field.classList.add('ct-input-error');
-      const err = document.createElement('span');
-      err.className = 'ct-field-error';
-      err.textContent = msg;
-      field.parentNode.appendChild(err);
-    }
-
-    function showSuccess() {
-      const old = document.getElementById('ct-success-banner');
-      if (old) old.remove();
-
-      const banner = document.createElement('div');
-      banner.id = 'ct-success-banner';
-      banner.innerHTML = '<i class="fas fa-check-circle"></i> Messaggio inviato! Ti risponderemo al più presto.';
-      form.parentNode.insertBefore(banner, form);
-      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      setTimeout(() => banner.remove(), 6000);
-    }
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <script>
-    new QRCode(document.getElementById("ct-qrcode"), {
-      text: "https://www.cognitoforms.com/Villab1/COMUNEDIVILLACARCINAMODULODIISCRIZIONEEREGISTRAZIONEAISERVIZIVILLAB?qr",
-      width: 220,
-      height: 220,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
+    document.querySelectorAll('.reveal, .sv-item-card').forEach(el => {
+      revealObserver.observe(el);
     });
   </script>
 
@@ -489,12 +304,14 @@
       if (!ring || !dot) return;
       let mouseX = 0, mouseY = 0;
       let ringX  = 0, ringY  = 0;
+      /* Il punto segue istantaneamente, l'alone segue con inerzia */
       document.addEventListener('mousemove', function(e) {
         mouseX = e.clientX;
         mouseY = e.clientY;
         dot.style.left = mouseX + 'px';
         dot.style.top  = mouseY + 'px';
       });
+      /* Velocità bassa (0.07) = alone molto morbido e cinematografico */
       function animateRing() {
         ringX += (mouseX - ringX) * 0.07;
         ringY += (mouseY - ringY) * 0.07;
@@ -503,6 +320,7 @@
         requestAnimationFrame(animateRing);
       }
       animateRing();
+      /* Hover su elementi interattivi */
       var hoverEls = document.querySelectorAll('a, button, .btn-main, .btn-ghost, .service-card, .stat-pill, .ct-faq-btn, .sv-item-card, .cs-card, .orari-card, .ct-channel-card');
       hoverEls.forEach(function(el) {
         el.addEventListener('mouseenter', function() {
