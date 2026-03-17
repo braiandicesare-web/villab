@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Villab – Dove le idee prendono vita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="css/styleWeb.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <!-- Cursore personalizzato -->
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- ========== NAVIGAZIONE ========== -->
+  <nav>
+    <a href="#">
+      <img src="images/logo.png" alt="Villab Logo" class="nav-logo" />
+    </a>
+
+    <!-- Hamburger (mobile) -->
+    <button class="hamburger" id="hamburger" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Menu desktop + mobile -->
+    <div class="nav-menu" id="nav-menu">
+      <a href="IndexHome.html" class="nav-active">Home</a>
+      <a href="chiSiamoWeb.html">Chi Siamo</a>
+      <a href="serviziWeb.html">Servizi</a>
+      <a href="ContattiWeb.html">Contatti</a>
+      <a href="ContattiWeb.html" class="nav-cta">Prenota il tuo posto</a>
+    </div>
+  </nav>
+
+  <!-- ========== HERO SPLIT 50/50 ========== -->
+  <section class="hero-split">
+    <!-- Sfondo -->
+    <div class="hero-split-bg"></div>
+    <div class="hero-split-dots"></div>
+
+    <!-- Colonna SINISTRA – Video Avatar -->
+    <div class="hero-col-img">
+      <div class="avatar-wrap">
+        <video
+          src="images/avatar-quasi-definitivo.mp4"
+          autoplay
+          loop
+          playsinline
+          controls
+          aria-label="Video avatar Villab"
+          style="max-height: 420px; width: 100%; object-fit: contain; border-radius: 16px;"
+        ></video>
+      </div>
+    </div>
+
+    <!-- Colonna DESTRA – Testo -->
+    <div class="hero-col-text">
+
+      <!-- Badge -->
+      <span class="hero-badge">
+        <span>✦</span> Aula Studio &amp; Community
+      </span>
+
+      <!-- Titolo -->
+      <h1><em>Villab.</em><br>Dove le idee<br>prendono vita.</h1>
+
+      <!-- Divider arancione -->
+      <div class="divider"></div>
+
+      <!-- Testo descrittivo -->
+      <p class="hero-desc">
+        Uno spazio pensato per giovani tra i 18 e i 35 anni. 🚀 Studia, socializza, partecipa ad eventi e crea nuove connessioni. Studio, community e opportunità: tutto in un unico posto. ✨
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero-btns">
+        <a href="ContattiWeb.html" class="btn-main">Prenota ora</a>
+        <a href="chiSiamoWeb.html" class="btn-ghost">Scopri di più</a>
+      </div>
+
+      <!-- Pillole statistiche -->
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <div class="sp-icon">📚</div>
+          <div>
+            <strong>18 – 35 anni</strong>
+            <span>Target community</span>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div class="sp-icon">🤝</div>
+          <div>
+            <strong>Community attiva</strong>
+            <span>Studio &amp; networking</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /hero-col-text -->
+  </section>
+
+  <!-- ========== CAROSELLO IMMAGINI ========== -->
+  <section class="carousel-section" id="carousel-section">
+    <div class="carousel-label">
+      <span>✦ Villab in immagini</span>
+      <h2>Scopri il nostro<br><em>spazio</em></h2>
+    </div>
+
+    <div class="carousel-viewport" id="carouselViewport">
+      <div class="carousel-track" id="carouselTrack">
+        <!-- Le slide vengono duplicate via JS per lo scroll infinito -->
+        <div class="carousel-slide"><img src="images/Home1.jpg" alt="Villab – spazio 1" /></div>
+        <div class="carousel-slide"><img src="images/Home2.png" alt="Villab – spazio 2" /></div>
+        <div class="carousel-slide"><img src="images/home3.png" alt="Villab – spazio 3" /></div>
+        <div class="carousel-slide"><img src="images/ChiSiamo2.png" alt="Villab – community" /></div>
+        <div class="carousel-slide"><img src="images/ChiSiamo3.png" alt="Villab – accesso" /></div>
+      </div>
+    </div>
+
+    <div class="carousel-dots" id="carouselDots"></div>
+  </section>
+
+  <!-- ========== SERVIZI PREVIEW ========== -->
+  <section class="services-section" id="servizi">
+    <div class="services-bg"></div>
+    <div class="services-dots"></div>
+
+    <div class="services-inner">
+
+      <div class="services-header reveal">
+        <span class="hero-badge"><span>✦</span> Cosa puoi fare</span>
+        <h2>Tutto quello che<br><em>Villab offre</em></h2>
+      </div>
+
+      <div class="services-grid">
+
+        <div class="service-card reveal">
+          <div class="sc-icon">📚</div>
+          <h3>Studia</h3>
+          <p>Postazioni silenziose e confortevoli per concentrarti sui tuoi obiettivi, disponibili ogni giorno senza limitazioni.</p>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="sc-icon">🤝</div>
+          <h3>Socializza</h3>
+          <p>Incontra altri giovani, scambia idee e costruisci connessioni reali in un ambiente dinamico e stimolante.</p>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="sc-icon">🎉</div>
+          <h3>Partecipa agli eventi</h3>
+          <p>Serate film, giochi da tavolo, workshop e attività culturali pensati per far crescere la community.</p>
+        </div>
+
+      </div>
+
+      <div class="services-cta reveal">
+        <a href="serviziWeb.html" class="btn-main">Scopri tutti i servizi</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== ORARI ========== -->
+  <section class="orari-section" id="orari">
+    <div class="orari-bg"></div>
+    <div class="orari-inner">
+
+      <div class="orari-text reveal">
+        <span class="hero-badge"><span>✦</span> Sempre aperto</span>
+        <h2>Quando vuoi,<br><em>come vuoi.</em></h2>
+        <p>Villab non ti mette limiti. Che sia notte fonda o domenica mattina, trovi sempre il tuo posto.</p>
+      </div>
+
+      <div class="orari-card reveal">
+        <div class="orari-row">
+          <span class="orari-day">Lunedì – Domenica</span>
+          <span class="orari-time">H24</span>
+        </div>
+        <div class="orari-divider"></div>
+        <div class="orari-badge-wrap">
+          <span class="orari-open-badge">🟢 Aperto adesso</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== CTA CENTRALE ========== -->
+  <section class="cta-section">
+    <div class="cta-bg"></div>
+    <div class="cta-dots"></div>
+    <div class="cta-inner reveal">
+      <h2>Pronto a far parte<br>della <em>community?</em></h2>
+      <p>Unisciti a Villab oggi stesso. Entra, studia, socializza e vivi qualcosa di nuovo.</p>
+      <div class="cta-btns">
+        <a href="ContattiWeb.html" class="btn-main">Prenota il tuo posto</a>
+        <a href="chiSiamoWeb.html" class="btn-ghost">Scopri chi siamo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="footer-container">
+      <a href="IndexHome.html">
+        <img src="images/logo.png" alt="Villab Logo" class="footer-logo" />
+      </a>
+
+      <div class="footer-nav">
+        <a href="IndexHome.html" class="footer-nav-active">Home</a>
+        <a href="chiSiamoWeb.html">Chi Siamo</a>
+        <a href="ServiziWeb.html">Servizi</a>
+        <a href="ContattiWeb.html">Contatti</a>
+      </div>
+
+      <div class="footer-info">
+        <div class="footer-info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Via XX Settembre, 22 – Villa Carcina (BS)</span>
+        </div>
+        <div class="footer-info-item">
+          <i class="fas fa-clock"></i>
+          <span>Aperto H24 · 7 giorni su 7</span>
+        </div>
+      </div>
+
+      <div class="footer-icons">
+        <a href="https://www.instagram.com/villab_villacarcina?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" aria-label="Seguici su Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://wa.me/393206966688" target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Villab. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    /* ---- Hamburger ---- */
+    const hamburger = document.getElementById('hamburger');
+    const navMenu   = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navMenu.classList.toggle('open');
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
+      });
+    });
+
+    /* ---- Carosello automatico (scroll infinito) ---- */
+    (function () {
+      const track     = document.getElementById('carouselTrack');
+      const viewport  = document.getElementById('carouselViewport');
+      const dotsWrap  = document.getElementById('carouselDots');
+
+      const origSlides = Array.from(track.children);
+      const total      = origSlides.length;
+      const GAP        = 24; // px, deve corrispondere al gap CSS
+
+      /* Crea i dot originali */
+      origSlides.forEach((_, i) => {
+        const d = document.createElement('button');
+        d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        d.setAttribute('aria-label', 'Vai alla slide ' + (i + 1));
+        d.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(d);
+      });
+
+      /* Duplica le slide (clone) per loop infinito */
+      origSlides.forEach(s => {
+        const clone = s.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      });
+
+      let slideW      = 0;
+      let currentIdx  = 0;
+      let offset      = 0;
+      let autoTimer   = null;
+      let isTransitioning = false;
+
+      function measureSlide() {
+        slideW = origSlides[0].offsetWidth + GAP;
+      }
+
+      function updateDots(idx) {
+        dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === idx % total);
+        });
+      }
+
+      function goTo(idx, animate = true) {
+        if (isTransitioning) return;
+        currentIdx = idx;
+        offset     = currentIdx * slideW;
+
+        if (animate) {
+          isTransitioning = true;
+          track.style.transition = 'transform .55s cubic-bezier(.4,0,.2,1)';
+        } else {
+          track.style.transition = 'none';
+        }
+
+        track.style.transform = `translateX(-${offset}px)`;
+        updateDots(currentIdx);
+      }
+
+      track.addEventListener('transitionend', () => {
+        isTransitioning = false;
+        /* Se siamo oltre le slide originali → torna all'inizio senza animazione */
+        if (currentIdx >= total) {
+          currentIdx = currentIdx % total;
+          goTo(currentIdx, false);
+        }
+      });
+
+      function next() {
+        goTo(currentIdx + 1);
+      }
+
+      function startAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(next, 3200);
+      }
+
+      /* Pausa al hover */
+      viewport.addEventListener('mouseenter', () => clearInterval(autoTimer));
+      viewport.addEventListener('mouseleave', startAuto);
+
+      /* Touch swipe */
+      let touchStartX = 0;
+      viewport.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend',   e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) dx < 0 ? next() : goTo(Math.max(0, currentIdx - 1));
+        startAuto();
+      });
+
+      /* Init */
+      function init() {
+        measureSlide();
+        goTo(0, false);
+        startAuto();
+      }
+
+      window.addEventListener('resize', () => { measureSlide(); goTo(currentIdx, false); });
+      window.addEventListener('load', init);
+    })();
+    /* ---- Scroll Reveal ---- */
+    (function () {
+      const revealEls = document.querySelectorAll('.reveal');
+      const observer  = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('revealed');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealEls.forEach(el => observer.observe(el));
+    })();
+  </script>
+
+  <script>
+    /* ---- Cursore Spotlight ---- */
+    (function () {
+      const ring = document.getElementById('cursorRing');
+      const dot  = document.getElementById('cursorDot');
+      if (!ring || !dot) return;
+      let mouseX = 0, mouseY = 0;
+      let ringX  = 0, ringY  = 0;
+      /* Il punto segue istantaneamente, l'alone segue con inerzia */
+      document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.left = mouseX + 'px';
+        dot.style.top  = mouseY + 'px';
+      });
+      /* Velocità bassa (0.07) = alone molto morbido e cinematografico */
+      function animateRing() {
+        ringX += (mouseX - ringX) * 0.07;
+        ringY += (mouseY - ringY) * 0.07;
+        ring.style.left = ringX + 'px';
+        ring.style.top  = ringY + 'px';
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+      /* Hover su elementi interattivi */
+      var hoverEls = document.querySelectorAll('a, button, .btn-main, .btn-ghost, .service-card, .stat-pill, .ct-faq-btn, .sv-item-card, .cs-card, .orari-card, .ct-channel-card');
+      hoverEls.forEach(function(el) {
+        el.addEventListener('mouseenter', function() {
+          ring.classList.add('is-hovering');
+          dot.classList.add('is-hovering');
+        });
+        el.addEventListener('mouseleave', function() {
+          ring.classList.remove('is-hovering');
+          dot.classList.remove('is-hovering');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -520,3 +520,231 @@ nav {
     transform: rotate(-45deg) translate(7px, -6px);
   }
 }
+  /* ================================================== */
+    /* HERO SPLIT 50/50 – layout specifico per la HOME    */
+    /* ================================================== */
+
+    .hero-split {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 6% 60px;
+      position: relative;
+      overflow: hidden;
+      gap: 48px;
+    }
+
+    /* Sfondo uguale all'hero originale */
+    .hero-split-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% -10%, rgba(30,90,137,0.8) 0%, transparent 65%),
+        linear-gradient(170deg, #0b2d4a 0%, #081e32 100%);
+      z-index: 0;
+    }
+
+    .hero-split-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      z-index: 0;
+    }
+
+    /* ---- Colonna immagine (sinistra) ---- */
+    .hero-col-img {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUp .7s ease .2s both;
+    }
+
+    .hero-col-img-inner {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .hero-col-img-inner img {
+      width: 100%;
+      border-radius: 22px;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.55);
+      border: 1px solid rgba(243,154,30,0.2);
+      display: block;
+    }
+
+    /* Alone arancione dietro l'immagine */
+    .hero-col-img-inner::before {
+      content: "";
+      position: absolute;
+      inset: -30px;
+      background: radial-gradient(ellipse at center, rgba(243,154,30,0.13) 0%, transparent 70%);
+      border-radius: 40px;
+      z-index: -1;
+    }
+
+    /* Decorazione geometrica angolo */
+    .hero-col-img-inner::after {
+      content: "";
+      position: absolute;
+      bottom: -18px;
+      right: -18px;
+      width: 80px;
+      height: 80px;
+      border-right: 3px solid rgba(243,154,30,0.35);
+      border-bottom: 3px solid rgba(243,154,30,0.35);
+      border-radius: 0 0 14px 0;
+    }
+
+    /* ---- Colonna testo (destra) ---- */
+    .hero-col-text {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .hero-col-text .hero-badge {
+      animation: fadeUp .6s ease .3s both;
+    }
+
+    .hero-col-text h1 {
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      margin: 0;
+      animation: fadeUp .6s ease .4s both;
+    }
+
+    .hero-col-text h1 em {
+      font-style: normal;
+      color: var(--villab-orange);
+    }
+
+    .hero-col-text .divider {
+      width: 56px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--villab-orange), var(--villab-orange-dark));
+      border-radius: 4px;
+      animation: fadeUp .6s ease .5s both;
+    }
+
+    .hero-col-text .hero-desc {
+      font-size: clamp(.92rem, 1.5vw, 1.05rem);
+      color: rgba(224,224,224,0.78);
+      line-height: 1.82;
+      font-weight: 300;
+      max-width: 520px;
+      margin: 0;
+      animation: fadeUp .6s ease .55s both;
+    }
+
+    .hero-col-text .hero-btns {
+      justify-content: flex-start;
+      margin: 0;
+      animation: fadeUp .6s ease .65s both;
+    }
+
+    /* ---- Pill statistica ---- */
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      animation: fadeUp .6s ease .75s both;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(243,154,30,0.1);
+      border: 1px solid rgba(243,154,30,0.22);
+      border-radius: 50px;
+      padding: 8px 18px 8px 10px;
+    }
+
+    .stat-pill .sp-icon {
+      width: 34px;
+      height: 34px;
+      background: rgba(243,154,30,0.18);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .stat-pill span {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text-gray);
+    }
+
+    .stat-pill strong {
+      display: block;
+      font-size: .88rem;
+      color: var(--villab-orange);
+      font-weight: 700;
+    }
+
+    /* ================================================== */
+    /* RESPONSIVE SPLIT HERO                              */
+    /* ================================================== */
+
+    @media (max-width: 900px) {
+      .hero-split {
+        flex-direction: column-reverse;
+        padding-top: 110px;
+        text-align: center;
+        gap: 36px;
+      }
+
+      .hero-col-img-inner {
+        max-width: 340px;
+        margin: 0 auto;
+      }
+
+      .hero-col-text .divider {
+        margin: 0 auto;
+      }
+
+      .hero-col-text .hero-desc {
+        margin: 0 auto;
+      }
+
+      .hero-col-text .hero-btns {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-split {
+        padding: 100px 5% 50px;
+        gap: 28px;
+      }
+
+      .hero-col-img-inner {
+        max-width: 280px;
+      }
+
+      .hero-col-text h1 {
+        font-size: 2.2rem;
+      }
+
+      .stat-pill span {
+        font-size: .74rem;
+      }
+    }
