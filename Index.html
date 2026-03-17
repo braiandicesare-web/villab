@@ -183,7 +183,7 @@
       <div class="orari-card reveal">
         <div class="orari-row">
           <span class="orari-day">Lunedì – Domenica</span>
-          <span class="orari-time">H24</span>
+          <span class="orari-time">Ore 7 - 24</span>
         </div>
         <div class="orari-divider"></div>
         <div class="orari-badge-wrap">
@@ -377,6 +377,357 @@
         });
       }, { threshold: 0.12 });
       revealEls.forEach(el => observer.observe(el));
+    })();
+  </script>
+
+  <!-- ========== CHATBOT FLOTTANTE ========== -->
+  <style>
+    /* --- Pulsante icona chat --- */
+    #chat-fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f39a1e, #c97a10);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 24px rgba(243,154,30,0.55);
+      z-index: 9999;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #chat-fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 32px rgba(243,154,30,0.7);
+    }
+    #chat-fab svg { width: 28px; height: 28px; fill: #fff; }
+    #chat-fab .icon-close { display: none; }
+    #chat-fab.open .icon-chat  { display: none; }
+    #chat-fab.open .icon-close { display: block; }
+
+    /* Pallino notifica */
+    #chat-fab::after {
+      content: '';
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #4ade80;
+      border: 2px solid #fff;
+      box-shadow: 0 0 6px #4ade80;
+      animation: pulse-dot 2s infinite;
+    }
+    #chat-fab.open::after { display: none; }
+    @keyframes pulse-dot {
+      0%,100% { opacity:1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* --- Finestra chat --- */
+    #chat-popup {
+      position: fixed;
+      bottom: 104px;
+      right: 28px;
+      width: 370px;
+      max-height: 600px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+      z-index: 9998;
+      display: none;
+      flex-direction: column;
+      background: #0b2d4a;
+      border: 1px solid rgba(243,154,30,0.3);
+      font-family: 'Poppins', sans-serif;
+      animation: popIn 0.28s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    #chat-popup.visible { display: flex; }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.88) translateY(20px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+
+    /* Header popup */
+    .cp-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(10,40,68,0.95);
+      border-bottom: 1px solid rgba(243,154,30,0.3);
+    }
+    .cp-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f39a1e, #f7b731);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 0 12px rgba(243,154,30,0.4);
+      flex-shrink: 0;
+    }
+    .cp-info .cp-name { font-weight: 600; font-size: 0.9rem; color: #fff; }
+    .cp-info .cp-status {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; color: #4ade80;
+    }
+    .cp-info .cp-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%; background: #4ade80;
+      box-shadow: 0 0 6px #4ade80;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+
+    /* Messaggi */
+    .cp-messages {
+      padding: 16px 16px 8px;
+      height: 240px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #f39a1e transparent;
+    }
+    .cp-messages::-webkit-scrollbar { width: 4px; }
+    .cp-messages::-webkit-scrollbar-thumb { background: #f39a1e; border-radius: 4px; }
+
+    .cp-msg { display: flex; flex-direction: column; max-width: 82%; animation: fadeUp .3s ease forwards; opacity: 0; }
+    .cp-msg.bot  { align-self: flex-start; }
+    .cp-msg.user { align-self: flex-end; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+
+    .cp-bubble {
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 0.83rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .cp-msg.bot  .cp-bubble {
+      background: rgba(30,90,137,0.3);
+      border: 1px solid rgba(243,154,30,0.2);
+      border-bottom-left-radius: 4px;
+      color: #dde6ee;
+    }
+    .cp-msg.user .cp-bubble {
+      background: #f39a1e;
+      border: 1px solid #c97a10;
+      border-bottom-right-radius: 4px;
+      color: #0b2d4a;
+      font-weight: 500;
+    }
+    .cp-meta { font-size: 0.66rem; color: rgba(200,220,240,0.45); margin-top: 3px; padding: 0 3px; }
+    .cp-msg.user .cp-meta { text-align: right; }
+
+    /* Typing dots */
+    .cp-typing .cp-bubble { display:flex; align-items:center; gap:5px; padding:12px 14px; }
+    .cp-dot { width:7px;height:7px;border-radius:50%;background:#f39a1e;animation:bounce 1.2s infinite; }
+    .cp-dot:nth-child(2){animation-delay:.2s}.cp-dot:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+    /* Suggerimenti */
+    .cp-suggestions {
+      padding: 6px 14px 12px;
+      background: rgba(10,40,68,0.3);
+      border-top: 1px solid rgba(243,154,30,0.12);
+    }
+    .cp-sugg-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing:.1em; color: rgba(200,220,240,0.4); margin-bottom: 7px; }
+    .cp-sugg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .cp-sugg-btn {
+      background: rgba(30,90,137,0.25);
+      border: 1px solid rgba(243,154,30,0.18);
+      border-radius: 9px;
+      padding: 7px 9px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.7rem;
+      color: #b8cfe0;
+      text-align: left;
+      cursor: pointer;
+      transition: all .18s;
+      display: flex; align-items: center; gap: 5px;
+      line-height: 1.35;
+    }
+    .cp-sugg-btn:hover { background:rgba(30,90,137,.5); border-color:#f39a1e; transform:translateY(-1px); }
+    .cp-sugg-btn .q-icon { color:#f39a1e; font-size:.9rem; }
+
+    /* Input area */
+    .cp-input-area {
+      display: flex; gap: 8px;
+      padding: 12px 14px;
+      border-top: 1px solid rgba(243,154,30,0.18);
+      background: rgba(10,40,68,0.4);
+    }
+    .cp-input-area input {
+      flex: 1;
+      background: rgba(10,40,68,0.7);
+      border: 1px solid rgba(243,154,30,0.2);
+      border-radius: 30px;
+      padding: 9px 15px;
+      font-size: 0.82rem;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .cp-input-area input::placeholder { color: rgba(200,220,240,0.35); }
+    .cp-input-area input:focus { border-color: #f39a1e; }
+    .cp-send {
+      width:38px;height:38px; border-radius:50%; border:none;
+      background: linear-gradient(135deg,#f39a1e,#c97a10);
+      color:#0b2d4a; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 14px rgba(243,154,30,0.35); flex-shrink:0;
+    }
+    .cp-send:hover { transform:scale(1.08); box-shadow:0 6px 20px rgba(243,154,30,.5); }
+    .cp-send svg { width:15px;height:15px;stroke:currentColor; }
+
+    @media(max-width:480px){
+      #chat-popup { width: calc(100vw - 32px); right:16px; bottom:96px; }
+      #chat-fab { bottom:20px; right:16px; }
+      .cp-sugg-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- FAB Button -->
+  <button id="chat-fab" aria-label="Apri chatbot Villab">
+    <!-- Icona chat -->
+    <svg class="icon-chat" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/>
+    </svg>
+    <!-- Icona X -->
+    <svg class="icon-close" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 6L6 18M6 6l12 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    </svg>
+  </button>
+
+  <!-- Popup Chat -->
+  <div id="chat-popup" role="dialog" aria-label="Chatbot Villab">
+    <div class="cp-header">
+      <div class="cp-avatar">🏠</div>
+      <div class="cp-info">
+        <div class="cp-name">Assistente Villab</div>
+        <div class="cp-status">Online ora</div>
+      </div>
+    </div>
+
+    <div class="cp-messages" id="cpMessages"></div>
+
+    <div class="cp-suggestions">
+      <div class="cp-sugg-title">✴️ Domande rapide</div>
+      <div class="cp-sugg-grid" id="cpSuggGrid"></div>
+    </div>
+
+    <div class="cp-input-area">
+      <input type="text" id="cpInput" placeholder="Scrivi un messaggio…" autocomplete="off"/>
+      <button class="cp-send" id="cpSend" title="Invia">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const qa = [
+        { icon:"🏛️", q:"Cos'è Villab?",      a:"Villab è un'aula studio e centro giovani nella mansarda della biblioteca, per ragazzi 18-35." },
+        { icon:"🕐", q:"Orari apertura?",     a:"Tutti i giorni 7:00-24:00. Sempre aperto!" },
+        { icon:"🔑", q:"Come accedere?",      a:"Richiedi il badge online. Ingresso da scala esterna o ascensore (9-18)." },
+        { icon:"💸", q:"È gratuito?",         a:"Sì, per i tesserati è gratuito/agevolato." },
+        { icon:"📅", q:"Prenotazione?",       a:"Posti liberi, ma puoi prenotare online per sicurezza." },
+        { icon:"💡", q:"Servizi?",            a:"Wi‑Fi, prese, sale riunioni, bacheca." },
+        { icon:"🎉", q:"Socializzare?",       a:"Certo! Serate, giochi, workshop." },
+        { icon:"📋", q:"Sale riunioni?",      a:"Sì, prenotabili su richiesta." },
+        { icon:"💬", q:"Contatti?",           a:"WhatsApp +39 320 696 6688, IG @villab_villacarcina." },
+        { icon:"📍", q:"Dove siamo?",         a:"Mansarda biblioteca, Villa Carcina." }
+      ];
+
+      const fab      = document.getElementById('chat-fab');
+      const popup    = document.getElementById('chat-popup');
+      const messEl   = document.getElementById('cpMessages');
+      const inputEl  = document.getElementById('cpInput');
+      const sendEl   = document.getElementById('cpSend');
+      const suggGrid = document.getElementById('cpSuggGrid');
+      let welcomed   = false;
+
+      function getTime(){
+        return new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      }
+
+      function addMsg(text, role){
+        const w = document.createElement('div');
+        w.className = `cp-msg ${role}`;
+        w.innerHTML = `<div class="cp-bubble">${text}</div><div class="cp-meta">${role==='bot'?'Villab · ':''}${getTime()}</div>`;
+        messEl.appendChild(w);
+        messEl.scrollTop = messEl.scrollHeight;
+      }
+
+      function showTyping(){
+        const w = document.createElement('div');
+        w.className = 'cp-msg bot cp-typing'; w.id = 'cpTyping';
+        w.innerHTML = `<div class="cp-bubble"><span class="cp-dot"></span><span class="cp-dot"></span><span class="cp-dot"></span></div>`;
+        messEl.appendChild(w);
+        messEl.scrollTop = messEl.scrollHeight;
+      }
+      function removeTyping(){ const t=document.getElementById('cpTyping'); if(t)t.remove(); }
+
+      function botReply(text){
+        showTyping();
+        setTimeout(()=>{ removeTyping(); addMsg(text,'bot'); }, 900+Math.random()*400);
+      }
+
+      function findAnswer(t){
+        t = t.toLowerCase();
+        for(const item of qa){
+          const kw = item.q.toLowerCase().split(' ').filter(w=>w.length>3);
+          if(kw.some(k=>t.includes(k))) return item.a;
+        }
+        return "Non ho trovato una risposta precisa. Contattaci su WhatsApp o Instagram! 😊";
+      }
+
+      function handleSend(){
+        const text = inputEl.value.trim();
+        if(!text) return;
+        addMsg(text,'user');
+        inputEl.value='';
+        botReply(findAnswer(text));
+      }
+
+      sendEl.addEventListener('click', handleSend);
+      inputEl.addEventListener('keydown', e=>{ if(e.key==='Enter') handleSend(); });
+
+      // Suggerimenti
+      qa.forEach(item=>{
+        const btn = document.createElement('button');
+        btn.className = 'cp-sugg-btn';
+        btn.innerHTML = `<span class="q-icon">${item.icon}</span>${item.q}`;
+        btn.addEventListener('click',()=>{ addMsg(item.q,'user'); botReply(item.a); });
+        suggGrid.appendChild(btn);
+      });
+
+      // Toggle apertura/chiusura
+      fab.addEventListener('click',()=>{
+        const isOpen = popup.classList.contains('visible');
+        if(isOpen){
+          popup.classList.remove('visible');
+          fab.classList.remove('open');
+        } else {
+          popup.classList.add('visible');
+          fab.classList.add('open');
+          inputEl.focus();
+          if(!welcomed){
+            welcomed = true;
+            setTimeout(()=> addMsg("Ciao! 👋 Sono l'assistente di Villab. Scegli una domanda o scrivimi liberamente!",'bot'), 400);
+          }
+        }
+      });
     })();
   </script>
 
