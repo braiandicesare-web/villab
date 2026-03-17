@@ -332,6 +332,164 @@
     <i class="fab fa-whatsapp"></i>
   </a>
 
+  <!-- ====== MAPPA ====== -->
+  <section class="cs-map-section">
+    <div class="cs-map-bg"></div>
+    <div class="cs-map-dots"></div>
+    <div class="cs-map-inner reveal">
+      <div class="cs-map-header">
+        <span class="hero-badge"><span>📍</span> Dove Siamo</span>
+        <h2>Trovaci a <em>Villa Carcina</em></h2>
+        <p class="cs-map-sub">Siamo nella mansarda della Biblioteca Comunale · Via XX Settembre, 22 – Villa Carcina (BS)</p>
+      </div>
+      <div class="cs-map-wrap">
+        <iframe
+          title="Mappa Villab – Biblioteca Comunale Villa Carcina"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2787.8923!2d10.17853!3d45.62950!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47817f3e0b2e2e2b%3A0x5b1e2e2e2e2e2e2e!2sVia%20XX%20Settembre%2C%2022%2C%2025069%20Villa%20Carcina%20BS!5e0!3m2!1sit!2sit!4v1700000000000"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="cs-map-pin-card">
+          <div class="cs-map-pin-icon">🏛️</div>
+          <div>
+            <strong>Biblioteca Comunale – Villab</strong>
+            <span>Via XX Settembre, 22 – Villa Carcina (BS)</span>
+            <a href="https://maps.google.com/?q=Via+XX+Settembre+22,+Villa+Carcina+BS" target="_blank" rel="noopener noreferrer" class="cs-map-directions">
+              <i class="fas fa-diamond-turn-right"></i> Ottieni indicazioni
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .cs-map-section {
+      position: relative;
+      padding: 90px 8% 100px;
+      overflow: hidden;
+    }
+    .cs-map-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(243,154,30,0.07) 0%, transparent 60%),
+        linear-gradient(170deg, #0a2540 0%, #081e32 100%);
+      z-index: 0;
+    }
+    .cs-map-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 36px 36px;
+      z-index: 0;
+    }
+    .cs-map-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .cs-map-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+    .cs-map-header h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+    .cs-map-header h2 em {
+      font-style: normal;
+      color: var(--villab-orange);
+    }
+    .cs-map-sub {
+      font-size: .95rem;
+      color: rgba(224,224,224,0.6);
+      font-weight: 300;
+    }
+    .cs-map-wrap {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(243,154,30,0.25);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.5);
+    }
+    .cs-map-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      filter: grayscale(20%) contrast(1.05);
+    }
+    .cs-map-pin-card {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(10, 36, 64, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(243,154,30,0.3);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 300px;
+      z-index: 2;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .cs-map-pin-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .cs-map-pin-card > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cs-map-pin-card strong {
+      font-size: .88rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .cs-map-pin-card span {
+      font-size: .77rem;
+      color: rgba(224,224,224,0.65);
+      line-height: 1.4;
+    }
+    .cs-map-directions {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      font-size: .76rem;
+      font-weight: 600;
+      color: var(--villab-orange) !important;
+      transition: opacity .2s;
+    }
+    .cs-map-directions:hover { opacity: .75; }
+
+    @media (max-width: 700px) {
+      .cs-map-section { padding: 60px 5% 70px; }
+      .cs-map-wrap { height: 320px; }
+      .cs-map-pin-card { max-width: calc(100% - 40px); bottom: 14px; left: 14px; }
+    }
+  </style>
+
   <!-- ====== FOOTER ====== -->
   <footer>
     <div class="footer-container">
