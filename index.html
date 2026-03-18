@@ -380,377 +380,485 @@
     })();
   </script>
 
-  <!-- ========== CHATBOT FLOTTANTE ========== -->
+  <!-- ========== CHATBOT FLOTTANTE – DECISION TREE ========== -->
   <style>
-    /* --- Pulsante icona chat --- */
+    /* --- FAB con immagine --- */
     #chat-fab {
       position: fixed;
       bottom: 28px;
       right: 28px;
-      width: 60px;
-      height: 60px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f39a1e, #c97a10);
+      background: transparent;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 24px rgba(243,154,30,0.55);
+      box-shadow: 0 6px 28px rgba(243,154,30,0.55);
       z-index: 9999;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+      padding: 0;
+      overflow: hidden;
     }
     #chat-fab:hover {
       transform: scale(1.1);
-      box-shadow: 0 10px 32px rgba(243,154,30,0.7);
+      box-shadow: 0 10px 36px rgba(243,154,30,0.72);
     }
-    #chat-fab svg { width: 28px; height: 28px; fill: #fff; }
-    #chat-fab .icon-close { display: none; }
-    #chat-fab.open .icon-chat  { display: none; }
-    #chat-fab.open .icon-close { display: block; }
+    #chat-fab img.fab-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      transition: opacity .2s;
+    }
+    #chat-fab .icon-close {
+      display: none;
+      position: absolute;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      background: rgba(11,45,74,0.88);
+      border-radius: 50%;
+    }
+    #chat-fab .icon-close svg { width:24px; height:24px; stroke:#fff; stroke-width:2.5; fill:none; }
+    #chat-fab.open img.fab-img { opacity: 0.15; }
+    #chat-fab.open .icon-close { display: flex; }
 
     /* Pallino notifica */
     #chat-fab::after {
       content: '';
       position: absolute;
-      top: 6px; right: 6px;
-      width: 11px; height: 11px;
+      top: 5px; right: 5px;
+      width: 13px; height: 13px;
       border-radius: 50%;
       background: #4ade80;
-      border: 2px solid #fff;
-      box-shadow: 0 0 6px #4ade80;
-      animation: pulse-dot 2s infinite;
+      border: 2.5px solid #fff;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse-fab 2s infinite;
+      z-index: 1;
     }
     #chat-fab.open::after { display: none; }
-    @keyframes pulse-dot {
-      0%,100% { opacity:1; }
-      50% { opacity: 0.4; }
-    }
+    @keyframes pulse-fab { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-    /* --- Finestra chat --- */
+    /* --- Popup finestra chat --- */
     #chat-popup {
       position: fixed;
-      bottom: 104px;
+      bottom: 112px;
       right: 28px;
       width: 370px;
-      max-height: 600px;
-      border-radius: 20px;
+      max-height: 620px;
+      border-radius: 22px;
       overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
       z-index: 9998;
       display: none;
       flex-direction: column;
       background: #0b2d4a;
-      border: 1px solid rgba(243,154,30,0.3);
+      border: 1px solid rgba(243,154,30,0.28);
       font-family: 'Poppins', sans-serif;
-      animation: popIn 0.28s cubic-bezier(.34,1.56,.64,1) forwards;
     }
-    #chat-popup.visible { display: flex; }
+    #chat-popup.visible {
+      display: flex;
+      animation: popIn .3s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
     @keyframes popIn {
-      from { opacity: 0; transform: scale(0.88) translateY(20px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0); }
+      from { opacity:0; transform: scale(.88) translateY(22px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
     }
 
-    /* Header popup */
+    /* Header */
     .cp-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
-      background: rgba(10,40,68,0.95);
-      border-bottom: 1px solid rgba(243,154,30,0.3);
+      gap: 11px;
+      padding: 13px 16px;
+      background: rgba(10,40,68,0.97);
+      border-bottom: 1px solid rgba(243,154,30,0.28);
     }
     .cp-avatar {
-      width: 36px; height: 36px;
+      width: 38px; height: 38px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f39a1e, #f7b731);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      box-shadow: 0 0 12px rgba(243,154,30,0.4);
+      overflow: hidden;
       flex-shrink: 0;
+      box-shadow: 0 0 14px rgba(243,154,30,0.45);
+      border: 2px solid rgba(243,154,30,0.4);
     }
-    .cp-info .cp-name { font-weight: 600; font-size: 0.9rem; color: #fff; }
+    .cp-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .cp-info { flex: 1; }
+    .cp-info .cp-name { font-weight:700; font-size:.88rem; color:#fff; }
     .cp-info .cp-status {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 0.72rem; color: #4ade80;
+      display:flex; align-items:center; gap:5px;
+      font-size:.7rem; color:#4ade80; margin-top:1px;
     }
     .cp-info .cp-status::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%; background: #4ade80;
-      box-shadow: 0 0 6px #4ade80;
-      animation: pulse 2s infinite;
+      content:''; width:6px; height:6px; border-radius:50%;
+      background:#4ade80; box-shadow:0 0 6px #4ade80;
+      animation: pulse-status 2s infinite;
     }
-    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+    @keyframes pulse-status { 0%,100%{opacity:1} 50%{opacity:.35} }
+    .cp-reset-btn {
+      background: rgba(243,154,30,0.12);
+      border: 1px solid rgba(243,154,30,0.28);
+      border-radius: 50px;
+      color: #f39a1e;
+      font-family: 'Poppins', sans-serif;
+      font-size: .68rem;
+      font-weight: 600;
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: background .18s;
+      white-space: nowrap;
+    }
+    .cp-reset-btn:hover { background: rgba(243,154,30,0.24); }
 
     /* Messaggi */
     .cp-messages {
-      padding: 16px 16px 8px;
-      height: 240px;
+      padding: 14px 14px 8px;
+      height: 260px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       scrollbar-width: thin;
       scrollbar-color: #f39a1e transparent;
     }
     .cp-messages::-webkit-scrollbar { width: 4px; }
     .cp-messages::-webkit-scrollbar-thumb { background: #f39a1e; border-radius: 4px; }
 
-    .cp-msg { display: flex; flex-direction: column; max-width: 82%; animation: fadeUp .3s ease forwards; opacity: 0; }
+    .cp-msg {
+      display: flex;
+      gap: 7px;
+      max-width: 86%;
+      animation: fadeUp .28s ease forwards;
+      opacity: 0;
+    }
     .cp-msg.bot  { align-self: flex-start; }
-    .cp-msg.user { align-self: flex-end; }
+    .cp-msg.user { align-self: flex-end; flex-direction: row-reverse; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
 
+    .cp-msg-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%; overflow: hidden; flex-shrink: 0;
+      margin-top: 4px;
+      border: 1.5px solid rgba(243,154,30,0.35);
+    }
+    .cp-msg-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .cp-msg.user .cp-msg-avatar {
+      background: rgba(30,90,137,0.55);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.75rem; border-color: rgba(255,255,255,0.15);
+    }
+
+    .cp-msg-body { display:flex; flex-direction:column; }
     .cp-bubble {
-      padding: 10px 14px;
+      padding: 9px 13px;
       border-radius: 16px;
-      font-size: 0.83rem;
-      line-height: 1.55;
+      font-size: 0.8rem;
+      line-height: 1.58;
       word-break: break-word;
     }
     .cp-msg.bot  .cp-bubble {
-      background: rgba(30,90,137,0.3);
-      border: 1px solid rgba(243,154,30,0.2);
-      border-bottom-left-radius: 4px;
+      background: rgba(30,90,137,0.32);
+      border: 1px solid rgba(243,154,30,0.18);
+      border-top-left-radius: 4px;
       color: #dde6ee;
     }
+    .cp-msg.bot  .cp-bubble strong { color: #f39a1e; }
     .cp-msg.user .cp-bubble {
-      background: #f39a1e;
-      border: 1px solid #c97a10;
-      border-bottom-right-radius: 4px;
+      background: linear-gradient(135deg,#f39a1e,#c97a10);
+      border-top-right-radius: 4px;
       color: #0b2d4a;
-      font-weight: 500;
+      font-weight: 600;
     }
-    .cp-meta { font-size: 0.66rem; color: rgba(200,220,240,0.45); margin-top: 3px; padding: 0 3px; }
-    .cp-msg.user .cp-meta { text-align: right; }
+    .cp-meta { font-size:.62rem; color:rgba(200,220,240,.38); margin-top:3px; padding:0 2px; }
+    .cp-msg.user .cp-meta { text-align:right; }
 
-    /* Typing dots */
-    .cp-typing .cp-bubble { display:flex; align-items:center; gap:5px; padding:12px 14px; }
-    .cp-dot { width:7px;height:7px;border-radius:50%;background:#f39a1e;animation:bounce 1.2s infinite; }
-    .cp-dot:nth-child(2){animation-delay:.2s}.cp-dot:nth-child(3){animation-delay:.4s}
-    @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
-
-    /* Suggerimenti */
-    .cp-suggestions {
-      padding: 6px 14px 12px;
-      background: rgba(10,40,68,0.3);
-      border-top: 1px solid rgba(243,154,30,0.12);
-    }
-    .cp-sugg-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing:.1em; color: rgba(200,220,240,0.4); margin-bottom: 7px; }
-    .cp-sugg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .cp-sugg-btn {
-      background: rgba(30,90,137,0.25);
+    /* Typing */
+    .cp-typing-wrap { display:flex; gap:7px; align-self:flex-start; animation: fadeUp .28s ease forwards; opacity:0; }
+    .cp-typing-bubble {
+      background: rgba(30,90,137,0.32);
       border: 1px solid rgba(243,154,30,0.18);
-      border-radius: 9px;
-      padding: 7px 9px;
+      border-radius:16px; border-top-left-radius:4px;
+      padding:11px 14px; display:flex; gap:5px; align-items:center;
+    }
+    .cp-dot { width:7px;height:7px;border-radius:50%;background:#f39a1e;animation:bncDot 1.2s infinite; }
+    .cp-dot:nth-child(2){animation-delay:.18s}.cp-dot:nth-child(3){animation-delay:.36s}
+    @keyframes bncDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+
+    /* Pulsanti opzioni */
+    .cp-options {
+      padding: 8px 12px 14px;
+      background: rgba(10,40,68,0.35);
+      border-top: 1px solid rgba(243,154,30,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .cp-opt-label {
+      font-size:.6rem; text-transform:uppercase; letter-spacing:.1em;
+      color:rgba(200,220,240,.38); margin-bottom:1px;
+    }
+    .cp-opt-btn {
+      background: rgba(30,90,137,0.28);
+      border: 1px solid rgba(243,154,30,0.2);
+      border-radius: 11px;
+      padding: 9px 13px;
       font-family: 'Poppins', sans-serif;
-      font-size: 0.7rem;
-      color: #b8cfe0;
+      font-size: .78rem;
+      font-weight: 500;
+      color: #cde0f0;
       text-align: left;
       cursor: pointer;
-      transition: all .18s;
-      display: flex; align-items: center; gap: 5px;
-      line-height: 1.35;
+      transition: background .18s, border-color .18s, transform .12s;
+      display:flex; align-items:center; gap:7px;
+      animation: optSlide .22s ease both;
     }
-    .cp-sugg-btn:hover { background:rgba(30,90,137,.5); border-color:#f39a1e; transform:translateY(-1px); }
-    .cp-sugg-btn .q-icon { color:#f39a1e; font-size:.9rem; }
+    .cp-opt-btn:hover { background:rgba(243,154,30,.18); border-color:#f39a1e; transform:translateX(3px); }
+    .cp-opt-btn:nth-child(2){animation-delay:.05s}
+    .cp-opt-btn:nth-child(3){animation-delay:.1s}
+    @keyframes optSlide{from{opacity:0;transform:translateX(-7px)}to{opacity:1;transform:translateX(0)}}
 
-    /* Input area */
-    .cp-input-area {
-      display: flex; gap: 8px;
-      padding: 12px 14px;
-      border-top: 1px solid rgba(243,154,30,0.18);
-      background: rgba(10,40,68,0.4);
-    }
-    .cp-input-area input {
-      flex: 1;
-      background: rgba(10,40,68,0.7);
-      border: 1px solid rgba(243,154,30,0.2);
-      border-radius: 30px;
-      padding: 9px 15px;
-      font-size: 0.82rem;
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      outline: none;
-      transition: border-color .2s;
-    }
-    .cp-input-area input::placeholder { color: rgba(200,220,240,0.35); }
-    .cp-input-area input:focus { border-color: #f39a1e; }
-    .cp-send {
-      width:38px;height:38px; border-radius:50%; border:none;
-      background: linear-gradient(135deg,#f39a1e,#c97a10);
-      color:#0b2d4a; cursor:pointer; display:flex; align-items:center; justify-content:center;
-      transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 4px 14px rgba(243,154,30,0.35); flex-shrink:0;
-    }
-    .cp-send:hover { transform:scale(1.08); box-shadow:0 6px 20px rgba(243,154,30,.5); }
-    .cp-send svg { width:15px;height:15px;stroke:currentColor; }
-
+    /* Responsive */
     @media(max-width:480px){
-      #chat-popup {
-        width: calc(100vw - 24px);
-        right: 12px;
-        bottom: 90px;
-        max-height: 82vh;
-      }
-      #chat-fab { bottom:16px; right:14px; }
-      .cp-messages { height: 210px; }
-      .cp-suggestions { padding: 5px 10px 9px; }
-      .cp-sugg-grid {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: 7px;
-        padding-bottom: 4px;
-        scrollbar-width: none;
-      }
-      .cp-sugg-grid::-webkit-scrollbar { display: none; }
-      .cp-sugg-btn {
-        flex-shrink: 0;
-        white-space: nowrap;
-        font-size: 0.68rem;
-        padding: 6px 10px;
-      }
+      #chat-popup { width:calc(100vw - 22px); right:11px; bottom:96px; }
+      #chat-fab   { bottom:16px; right:14px; width:60px; height:60px; }
+      .cp-messages { height:210px; }
     }
   </style>
 
   <!-- FAB Button -->
   <button id="chat-fab" aria-label="Apri chatbot Villab">
-    <!-- Icona chat -->
-    <svg class="icon-chat" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/>
-    </svg>
-    <!-- Icona X -->
-    <svg class="icon-close" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 6L6 18M6 6l12 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-    </svg>
+    <img class="fab-img" src="images/IconaChatbot.png" alt="Chatbot Villab" />
+    <span class="icon-close">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+    </span>
   </button>
 
   <!-- Popup Chat -->
   <div id="chat-popup" role="dialog" aria-label="Chatbot Villab">
+
     <div class="cp-header">
-      <div class="cp-avatar">🏠</div>
+      <div class="cp-avatar">
+        <img src="images/IconaChatbot.png" alt="Villab Bot" />
+      </div>
       <div class="cp-info">
         <div class="cp-name">Assistente Villab</div>
         <div class="cp-status">Online ora</div>
       </div>
+      <button class="cp-reset-btn" id="cpReset">🔙 Ricomincia</button>
     </div>
 
     <div class="cp-messages" id="cpMessages"></div>
 
-    <div class="cp-suggestions">
-      <div class="cp-sugg-title">✴️ Domande rapide</div>
-      <div class="cp-sugg-grid" id="cpSuggGrid"></div>
+    <div class="cp-options" id="cpOptions">
+      <div class="cp-opt-label">Scegli un'opzione</div>
     </div>
 
-    <div class="cp-input-area">
-      <input type="text" id="cpInput" placeholder="Scrivi un messaggio…" autocomplete="off"/>
-      <button class="cp-send" id="cpSend" title="Invia">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
-          <line x1="22" y1="2" x2="11" y2="13"/>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      </button>
-    </div>
   </div>
 
   <script>
-    (function(){
-      const qa = [
-        { icon:"🏛️", q:"Cos'è Villab?",      a:"Villab è un'aula studio e centro giovani nella mansarda della biblioteca, per ragazzi 18-35." },
-        { icon:"🕐", q:"Orari apertura?",     a:"Tutti i giorni 7:00-24:00. Sempre aperto!" },
-        { icon:"🔑", q:"Come accedere?",      a:"Richiedi il badge online. Ingresso da scala esterna o ascensore (9-18)." },
-        { icon:"💸", q:"È gratuito?",         a:"Sì, per i tesserati è gratuito/agevolato." },
-        { icon:"📅", q:"Prenotazione?",       a:"Posti liberi, ma puoi prenotare online per sicurezza." },
-        { icon:"💡", q:"Servizi?",            a:"Wi‑Fi, prese, sale riunioni, bacheca." },
-        { icon:"🎉", q:"Socializzare?",       a:"Certo! Serate, giochi, workshop." },
-        { icon:"📋", q:"Sale riunioni?",      a:"Sì, prenotabili su richiesta." },
-        { icon:"💬", q:"Contatti?",           a:"WhatsApp +39 320 696 6688, IG @villab_villacarcina." },
-        { icon:"📍", q:"Dove siamo?",         a:"Mansarda biblioteca, Via XX Settembre, 22 – Villa Carcina (BS)." }
-      ];
+  (function(){
+    /* ── DECISION TREE ── */
+    const tree = {
+      home: {
+        bot: "👋 Ciao! Sono l'assistente di <strong>Villab</strong>.\nCosa vuoi sapere?",
+        opts: [
+          { label:"🏛️ Cos'è Villab",       next:"cosèvillab"   },
+          { label:"ℹ️ Info pratiche",        next:"infopratiche" },
+          { label:"🎯 Servizi e attività",   next:"servizi"      }
+        ]
+      },
+      cosèvillab: {
+        bot: "🏛️ <strong>Villab</strong> è un'aula studio e centro giovani per ragazzi tra <strong>18 e 35 anni</strong>: uno spazio dove studiare, lavorare e stare insieme. Vuoi approfondire?",
+        opts: [
+          { label:"🕐 Orari di apertura",   next:"orari"      },
+          { label:"💡 Servizi disponibili", next:"servdetail"  },
+          { label:"🎉 Attività e socialità",next:"socialita"   }
+        ]
+      },
+      infopratiche: {
+        bot: "ℹ️ Che tipo di informazione ti serve?",
+        opts: [
+          { label:"🕐 Orari di apertura",   next:"orari"   },
+          { label:"🔑 Come accedere",       next:"accesso" },
+          { label:"💸 Costi",               next:"costi"   }
+        ]
+      },
+      servizi: {
+        bot: "🎯 Cosa ti interessa sapere?",
+        opts: [
+          { label:"💡 Servizi (Wi-Fi, prese…)", next:"servdetail"   },
+          { label:"📋 Sale riunioni",            next:"saleriunioni" },
+          { label:"🎉 Eventi e socialità",       next:"socialita"    }
+        ]
+      },
+      orari: {
+        bot: "🕐 Villab è aperto <strong>tutti i giorni</strong> dalle <strong>7:00 alle 24:00</strong>. Sempre a disposizione! 🌙",
+        opts: [
+          { label:"🔑 Come accedere",  next:"accesso" },
+          { label:"📍 Dove siamo",     next:"dove"    },
+          { label:"🔙 Torna al menu",  next:"home"    }
+        ]
+      },
+      accesso: {
+        bot: "🔑 Puoi accedere con il tuo <strong>badge digitale</strong> (richiedi online), tramite la <strong>scala esterna</strong> o l'<strong>ascensore</strong>. 🚪",
+        opts: [
+          { label:"💸 Costi",           next:"costi"        },
+          { label:"📅 Prenotazione",    next:"prenotazione" },
+          { label:"🔙 Torna al menu",   next:"home"         }
+        ]
+      },
+      costi: {
+        bot: "💸 L'accesso è <strong>gratuito</strong> o <strong>agevolato</strong> per chi è tesserato. Studiare non ha prezzo! 🎓",
+        opts: [
+          { label:"📅 Prenotazione",    next:"prenotazione" },
+          { label:"💡 Servizi",         next:"servdetail"   },
+          { label:"🔙 Torna al menu",   next:"home"         }
+        ]
+      },
+      servdetail: {
+        bot: "💡 Villab offre:<br>• <strong>Wi-Fi</strong> veloce<br>• <strong>Prese elettriche</strong> ovunque<br>• <strong>Sale riunioni</strong><br>• <strong>Bacheca</strong> annunci e iniziative ⚡",
+        opts: [
+          { label:"📋 Sale riunioni",   next:"saleriunioni" },
+          { label:"📅 Prenotazione",    next:"prenotazione" },
+          { label:"🔙 Torna al menu",   next:"home"         }
+        ]
+      },
+      saleriunioni: {
+        bot: "📋 Le <strong>sale riunioni</strong> sono prenotabili su richiesta, perfette per team, gruppi studio e meeting. 🤝",
+        opts: [
+          { label:"📅 Come prenotare",  next:"prenotazione" },
+          { label:"💬 Contatti",        next:"contatti"     },
+          { label:"🔙 Torna al menu",   next:"home"         }
+        ]
+      },
+      socialita: {
+        bot: "🎉 A Villab organizziamo <strong>serate</strong>, <strong>giochi</strong> e <strong>workshop</strong> per conoscere nuove persone. 🎲",
+        opts: [
+          { label:"💬 Contatti",        next:"contatti" },
+          { label:"📍 Dove siamo",      next:"dove"     },
+          { label:"🔙 Torna al menu",   next:"home"     }
+        ]
+      },
+      prenotazione: {
+        bot: "📅 I posti sono solitamente liberi, ma puoi fare una <strong>prenotazione online</strong> per essere sicuro del tuo spazio. 🖥️",
+        opts: [
+          { label:"💬 Contatti",        next:"contatti" },
+          { label:"📍 Dove siamo",      next:"dove"     },
+          { label:"🔙 Torna al menu",   next:"home"     }
+        ]
+      },
+      dove: {
+        bot: "📍 Ci trovi nella <strong>mansarda della Biblioteca</strong> di <strong>Villa Carcina</strong> – Via XX Settembre, 22 (BS). 🗺️",
+        opts: [
+          { label:"💬 Contatti",        next:"contatti" },
+          { label:"🕐 Orari",           next:"orari"    },
+          { label:"🔙 Torna al menu",   next:"home"     }
+        ]
+      },
+      contatti: {
+        bot: "💬 Puoi contattarci qui:<br>📱 <strong>WhatsApp</strong>: <a href='https://wa.me/393206966688' style='color:#f39a1e'>+39 320 696 6688</a><br>📸 <strong>Instagram</strong>: <a href='https://instagram.com/villab_villacarcina' target='_blank' style='color:#f39a1e'>@villab_villacarcina</a>",
+        opts: [
+          { label:"📍 Dove siamo",      next:"dove"  },
+          { label:"🕐 Orari",           next:"orari" },
+          { label:"🔙 Torna al menu",   next:"home"  }
+        ]
+      }
+    };
 
-      const fab      = document.getElementById('chat-fab');
-      const popup    = document.getElementById('chat-popup');
-      const messEl   = document.getElementById('cpMessages');
-      const inputEl  = document.getElementById('cpInput');
-      const sendEl   = document.getElementById('cpSend');
-      const suggGrid = document.getElementById('cpSuggGrid');
-      let welcomed   = false;
+    const fab     = document.getElementById('chat-fab');
+    const popup   = document.getElementById('chat-popup');
+    const messEl  = document.getElementById('cpMessages');
+    const optsEl  = document.getElementById('cpOptions');
+    const resetBtn= document.getElementById('cpReset');
+    let opened    = false;
 
-      function getTime(){
-        return new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    function getTime(){
+      return new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    }
+
+    function addMsg(html, role){
+      const wrap = document.createElement('div');
+      wrap.className = `cp-msg ${role}`;
+
+      const av = document.createElement('div');
+      av.className = 'cp-msg-avatar';
+      if(role === 'bot'){
+        av.innerHTML = '<img src="images/IconaChatbot.png" alt="bot">';
+      } else {
+        av.textContent = '👤';
       }
 
-      function addMsg(text, role){
-        const w = document.createElement('div');
-        w.className = `cp-msg ${role}`;
-        w.innerHTML = `<div class="cp-bubble">${text}</div><div class="cp-meta">${role==='bot'?'Villab · ':''}${getTime()}</div>`;
-        messEl.appendChild(w);
-        messEl.scrollTop = messEl.scrollHeight;
-      }
+      const body = document.createElement('div');
+      body.className = 'cp-msg-body';
+      body.innerHTML = `<div class="cp-bubble">${html.replace(/\n/g,'<br>')}</div><div class="cp-meta">${role==='bot'?'Villab · ':''}${getTime()}</div>`;
 
-      function showTyping(){
-        const w = document.createElement('div');
-        w.className = 'cp-msg bot cp-typing'; w.id = 'cpTyping';
-        w.innerHTML = `<div class="cp-bubble"><span class="cp-dot"></span><span class="cp-dot"></span><span class="cp-dot"></span></div>`;
-        messEl.appendChild(w);
-        messEl.scrollTop = messEl.scrollHeight;
-      }
-      function removeTyping(){ const t=document.getElementById('cpTyping'); if(t)t.remove(); }
+      wrap.appendChild(av);
+      wrap.appendChild(body);
+      messEl.appendChild(wrap);
+      messEl.scrollTop = messEl.scrollHeight;
+    }
 
-      function botReply(text){
-        showTyping();
-        setTimeout(()=>{ removeTyping(); addMsg(text,'bot'); }, 900+Math.random()*400);
-      }
+    function showTyping(){
+      const wrap = document.createElement('div');
+      wrap.className = 'cp-typing-wrap'; wrap.id = 'cpTyping';
+      wrap.innerHTML = `<div class="cp-msg-avatar"><img src="images/IconaChatbot.png" alt="bot"></div><div class="cp-typing-bubble"><span class="cp-dot"></span><span class="cp-dot"></span><span class="cp-dot"></span></div>`;
+      messEl.appendChild(wrap);
+      messEl.scrollTop = messEl.scrollHeight;
+    }
+    function hideTyping(){ const t=document.getElementById('cpTyping'); if(t)t.remove(); }
 
-      function findAnswer(t){
-        t = t.toLowerCase();
-        for(const item of qa){
-          const kw = item.q.toLowerCase().split(' ').filter(w=>w.length>3);
-          if(kw.some(k=>t.includes(k))) return item.a;
-        }
-        return "Non ho trovato una risposta precisa. Contattaci su WhatsApp o Instagram! 😊";
-      }
-
-      function handleSend(){
-        const text = inputEl.value.trim();
-        if(!text) return;
-        addMsg(text,'user');
-        inputEl.value='';
-        botReply(findAnswer(text));
-      }
-
-      sendEl.addEventListener('click', handleSend);
-      inputEl.addEventListener('keydown', e=>{ if(e.key==='Enter') handleSend(); });
-
-      // Suggerimenti
-      qa.forEach(item=>{
+    function renderOpts(nodeId){
+      const node = tree[nodeId];
+      optsEl.innerHTML = '<div class="cp-opt-label">Scegli un\'opzione</div>';
+      node.opts.forEach((o,i)=>{
         const btn = document.createElement('button');
-        btn.className = 'cp-sugg-btn';
-        btn.innerHTML = `<span class="q-icon">${item.icon}</span>${item.q}`;
-        btn.addEventListener('click',()=>{ addMsg(item.q,'user'); botReply(item.a); });
-        suggGrid.appendChild(btn);
+        btn.className = 'cp-opt-btn';
+        btn.textContent = o.label;
+        btn.style.animationDelay = (i*.06)+'s';
+        btn.addEventListener('click', ()=> handleChoice(o.label, o.next));
+        optsEl.appendChild(btn);
       });
+    }
 
-      // Toggle apertura/chiusura
-      fab.addEventListener('click',()=>{
-        const isOpen = popup.classList.contains('visible');
-        if(isOpen){
-          popup.classList.remove('visible');
-          fab.classList.remove('open');
-        } else {
-          popup.classList.add('visible');
-          fab.classList.add('open');
-          inputEl.focus();
-          if(!welcomed){
-            welcomed = true;
-            setTimeout(()=> addMsg("Ciao! 👋 Sono l'assistente di Villab. Scegli una domanda o scrivimi liberamente!",'bot'), 400);
-          }
-        }
-      });
-    })();
+    function goTo(nodeId, delay){
+      delay = delay || 650;
+      optsEl.innerHTML = '';
+      showTyping();
+      setTimeout(()=>{
+        hideTyping();
+        addMsg(tree[nodeId].bot, 'bot');
+        renderOpts(nodeId);
+      }, delay);
+    }
+
+    function handleChoice(label, nextId){
+      addMsg(label, 'user');
+      goTo(nextId);
+    }
+
+    function initChat(){
+      messEl.innerHTML = '';
+      goTo('home', 400);
+    }
+
+    /* Toggle apri/chiudi */
+    fab.addEventListener('click', ()=>{
+      const isOpen = popup.classList.contains('visible');
+      if(isOpen){
+        popup.classList.remove('visible');
+        fab.classList.remove('open');
+      } else {
+        popup.classList.add('visible');
+        fab.classList.add('open');
+        if(!opened){ opened = true; initChat(); }
+      }
+    });
+
+    resetBtn.addEventListener('click', initChat);
+  })();
   </script>
 
   <script>
