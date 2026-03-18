@@ -413,7 +413,9 @@
         <p class="ct-form-sub">Compila il modulo e ti risponderemo nel più breve tempo possibile.</p>
       </div>
 
-      <form class="ct-form reveal" id="ctForm" novalidate>
+      <form class="ct-form reveal" id="ctForm" action="https://formsubmit.co/braian.dicesare@gmail.com" method="POST" novalidate>
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
         <div class="ct-form-row">
           <div class="ct-form-group">
             <label for="nome">Nome</label>
@@ -572,8 +574,9 @@
 
     // ---- FORM CONTATTI ----
     const form = document.getElementById('ctForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       let valid = true;
 
@@ -598,9 +601,29 @@
 
       if (!valid) return;
 
-      // Successo
-      showSuccess();
-      form.reset();
+      // Disabilita il bottone durante l'invio
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:9px;"></i>Invio in corso...';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        });
+
+        if (response.ok) {
+          showSuccess();
+          form.reset();
+        } else {
+          showFormError('Errore durante l\'invio. Riprova più tardi.');
+        }
+      } catch (err) {
+        showFormError('Errore di rete. Controlla la connessione e riprova.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:9px;"></i>Invia il messaggio';
+      }
     });
 
     function showError(field, msg) {
@@ -614,6 +637,8 @@
     function showSuccess() {
       const old = document.getElementById('ct-success-banner');
       if (old) old.remove();
+      const old2 = document.getElementById('ct-error-banner');
+      if (old2) old2.remove();
 
       const banner = document.createElement('div');
       banner.id = 'ct-success-banner';
@@ -622,6 +647,18 @@
       banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       setTimeout(() => banner.remove(), 6000);
+    }
+
+    function showFormError(msg) {
+      const old = document.getElementById('ct-error-banner');
+      if (old) old.remove();
+
+      const banner = document.createElement('div');
+      banner.id = 'ct-error-banner';
+      banner.style.cssText = 'display:flex;align-items:center;gap:10px;background:#fdecea;color:#b71c1c;border:1px solid #e57373;border-radius:8px;padding:14px 20px;margin-bottom:20px;font-size:15px;font-weight:500;';
+      banner.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + msg;
+      form.parentNode.insertBefore(banner, form);
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   </script>
 
