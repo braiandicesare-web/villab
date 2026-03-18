@@ -250,5 +250,15 @@
       });
     })();
   </script>
+  <!-- ===== CHATBOT VILLAB ===== -->
+<script>
+  fetch('/villab/chatbot-villab.html')
+    .then(function(r){ return r.text(); })
+    .then(function(html){
+      var div = document.createElement('div');
+      div.innerHTML = html;
+      document.body.appendChild(div);
+    });
+</script>
 </body>
 </html>
