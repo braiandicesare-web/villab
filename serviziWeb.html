@@ -12,16 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
-<!-- ===== CHATBOT VILLAB ===== -->
-    <script>
-      fetch('chatbot-villab.html')
-        .then(function(r){ return r.text(); })
-        .then(function(html){
-          var div = document.createElement('div');
-          div.innerHTML = html;
-          document.body.appendChild(div);
-        });
-    </script>
+
   <!-- Cursore personalizzato -->
   <div class="cursor-ring" id="cursorRing"></div>
   <div class="cursor-dot" id="cursorDot"></div>
@@ -344,5 +335,15 @@
       });
     })();
   </script>
+  <!-- ===== CHATBOT VILLAB ===== -->
+<script>
+  fetch('/villab/chatbot-villab.html')
+    .then(function(r){ return r.text(); })
+    .then(function(html){
+      var div = document.createElement('div');
+      div.innerHTML = html;
+      document.body.appendChild(div);
+    });
+</script>
 </body>
 </html>
