@@ -972,16 +972,33 @@
       return img;
     }
 
-    function addBotMessage(text) {
+    function addBotMessage(text, onDone) {
       var row = document.createElement('div');
       row.className = 'vb-msg vb-msg-bot';
       row.appendChild(makeAvatar());
       var bubble = document.createElement('div');
       bubble.className = 'vb-bubble';
-      bubble.textContent = text;
       row.appendChild(bubble);
       messages.appendChild(row);
       scrollDown();
+
+      var i = 0;
+      var speed = 18;
+      function typeNext() {
+        if (i < text.length) {
+          if (text[i] === '\n') {
+            bubble.appendChild(document.createElement('br'));
+          } else {
+            bubble.appendChild(document.createTextNode(text[i]));
+          }
+          i++;
+          scrollDown();
+          setTimeout(typeNext, speed);
+        } else {
+          if (typeof onDone === 'function') onDone();
+        }
+      }
+      typeNext();
     }
 
     function addUserMessage(text) {
@@ -1033,15 +1050,17 @@
       setTimeout(function () {
         removeTyping();
         goToNode(next);
-        isWaiting = false;
       }, 1800);
     }
 
     function goToNode(nodeId) {
       var node = TREE[nodeId];
       if (!node) return;
-      addBotMessage(node.bot);
-      renderOptions(node.options);
+      /* mostra i pulsanti solo quando il typewriter ha finito */
+      addBotMessage(node.bot, function () {
+        renderOptions(node.options);
+        isWaiting = false;
+      });
     }
 
     function scrollDown() {
