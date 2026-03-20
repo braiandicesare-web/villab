@@ -413,7 +413,7 @@
         <p class="ct-form-sub">Compila il modulo e ti risponderemo nel più breve tempo possibile.</p>
       </div>
 
-      <form class="ct-form reveal" id="ctForm" action="https://formsubmit.co/braian.dicesare@gmail.com" method="POST" novalidate>
+      <form class="ct-form reveal" id="ctForm" action="https://formsubmit.co/ajax/braian.dicesare@gmail.com" method="POST" novalidate>
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_template" value="table">
         <div class="ct-form-row">
@@ -612,15 +612,19 @@
           body: new FormData(form)
         });
 
-        if (response.ok) {
+        const data = await response.json();
+
+        if (response.ok && data.success === 'true') {
           showSuccess();
           form.reset();
+          submitBtn.style.display = 'none';
         } else {
           showFormError('Errore durante l\'invio. Riprova più tardi.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:9px;"></i>Invia il messaggio';
         }
       } catch (err) {
         showFormError('Errore di rete. Controlla la connessione e riprova.');
-      } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:9px;"></i>Invia il messaggio';
       }
