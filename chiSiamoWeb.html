@@ -251,7 +251,9 @@
       });
     })();
   </script>
-  <!-- ===== CHATBOT VILLAB ===== -->
+  
+
+<!-- ===== CHATBOT VILLAB ===== -->
 <!-- ========== CHATBOT FLOTTANTE – DECISION TREE (v2) ========== -->
   <style>
     /* --- FAB --- */
@@ -611,9 +613,7 @@
         ]
       },
       ingresso: {
-        bot: "Hai due opzioni per entrare:
-🚪 Scala esterna — sempre disponibile negli orari di apertura.
-🛗 Ascensore — disponibile durante gli orari della biblioteca comunale.",
+        bot: "Hai due opzioni per entrare:\n🚪 Scala esterna — sempre disponibile negli orari di apertura.\n🛗 Ascensore — disponibile durante gli orari della biblioteca comunale.",
         options: [
           { label: "♿ Accessibilità",       next: "accessibilita" },
           { label: "🕐 Orari apertura",     next: "orari" },
@@ -668,9 +668,7 @@
         ]
       },
       indirizzo: {
-        bot: "📍 Via XX Settembre, 22 – Villa Carcina (BS)
-
-Se vuoi indicazioni stradali, puoi cercarlo su Google Maps!",
+        bot: "📍 Via XX Settembre, 22 – Villa Carcina (BS)\n\nSe vuoi indicazioni stradali, puoi cercarlo su Google Maps!",
         options: [
           { label: "🚗 Parcheggio vicino?", next: "parcheggio" },
           { label: "🏛️ Posizione interna",  next: "posizioneInterna" },
@@ -714,10 +712,7 @@ Se vuoi indicazioni stradali, puoi cercarlo su Google Maps!",
         ]
       },
       spazi: {
-        bot: "Villab mette a disposizione spazi diversi per ogni momento della giornata:
-📖 Area studio silenziosa
-☕ Area relax
-🎤 Spazi per eventi e attività",
+        bot: "Villab mette a disposizione spazi diversi per ogni momento della giornata:\n📖 Area studio silenziosa\n☕ Area relax\n🎤 Spazi per eventi e attività",
         options: [
           { label: "📋 Sale riunioni",      next: "saleRiunioni" },
           { label: "🎉 Socializzare",       next: "socializzare" },
@@ -757,12 +752,7 @@ Se vuoi indicazioni stradali, puoi cercarlo su Google Maps!",
         ]
       },
       eventi: {
-        bot: "Il nostro calendario è ricco di appuntamenti:
-🎬 Serate cinema
-🎲 Giochi da tavolo
-🎤 Workshop e incontri tematici
-
-Seguici su Instagram per non perderti nulla!",
+        bot: "Il nostro calendario è ricco di appuntamenti:\n🎬 Serate cinema\n🎲 Giochi da tavolo\n🎤 Workshop e incontri tematici\n\nSeguici su Instagram per non perderti nulla!",
         options: [
           { label: "📸 Instagram",          next: "instagram" },
           { label: "🔙 Torna all'inizio",   next: "home" }
@@ -807,18 +797,14 @@ Seguici su Instagram per non perderti nulla!",
         ]
       },
       whatsapp: {
-        bot: "Scrivici su WhatsApp, ti rispondiamo velocemente!
-📱 +39 320 696 6688
-
-Siamo disponibili tutti i giorni. 🙂",
+        bot: "Scrivici su WhatsApp, ti rispondiamo velocemente!\n📱 +39 320 696 6688\n\nSiamo disponibili tutti i giorni. 🙂",
         options: [
           { label: "📸 Instagram",          next: "instagram" },
           { label: "🔙 Torna all'inizio",   next: "home" }
         ]
       },
       instagram: {
-        bot: "Seguici su Instagram per restare aggiornato/a su eventi, novità e tutto quello che succede da Villab!
-📸 @villab_villacarcina",
+        bot: "Seguici su Instagram per restare aggiornato/a su eventi, novità e tutto quello che succede da Villab!\n📸 @villab_villacarcina",
         options: [
           { label: "📱 WhatsApp",           next: "whatsapp" },
           { label: "🔙 Torna all'inizio",   next: "home" }
@@ -873,8 +859,7 @@ Siamo disponibili tutti i giorni. 🙂",
       var speed = 35;
       function typeNext() {
         if (i < text.length) {
-          if (text[i] === '
-') {
+          if (text[i] === '\n') {
             bubble.appendChild(document.createElement('br'));
           } else {
             bubble.appendChild(document.createTextNode(text[i]));
