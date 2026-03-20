@@ -336,14 +336,709 @@
     })();
   </script>
   <!-- ===== CHATBOT VILLAB ===== -->
-<script>
-  fetch('/villab/chatbot-villab.html')
-    .then(function(r){ return r.text(); })
-    .then(function(html){
-      var div = document.createElement('div');
-      div.innerHTML = html;
-      document.body.appendChild(div);
+<!-- ========== CHATBOT FLOTTANTE – DECISION TREE (v2) ========== -->
+  <style>
+    /* --- FAB --- */
+    #vb-fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 9999;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 6px 28px rgba(243,154,30,0.45);
+      transition: transform .25s, box-shadow .25s;
+    }
+    #vb-fab:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 36px rgba(243,154,30,0.6);
+    }
+    #vb-fab img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+    #vb-fab::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid rgba(243,154,30,0.55);
+      animation: vb-pulse 2s infinite;
+    }
+    #vb-fab.open::after { display: none; }
+    @keyframes vb-pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* --- Finestra chat --- */
+    #vb-window {
+      position: fixed;
+      bottom: 110px;
+      right: 28px;
+      width: 370px;
+      max-width: calc(100vw - 40px);
+      height: 560px;
+      max-height: calc(100vh - 130px);
+      background: linear-gradient(160deg, #0b2d4a 0%, #081e32 100%);
+      border: 1px solid rgba(243,154,30,0.22);
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      z-index: 9998;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+      overflow: hidden;
+      transform: scale(0.92) translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .28s cubic-bezier(.34,1.56,.64,1), opacity .22s ease;
+    }
+    #vb-window.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* --- Header --- */
+    #vb-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(14,53,88,0.85);
+      border-bottom: 1px solid rgba(243,154,30,0.18);
+      flex-shrink: 0;
+    }
+    #vb-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--villab-orange);
+      flex-shrink: 0;
+    }
+    .vb-header-info { flex: 1; }
+    .vb-header-name {
+      font-size: .88rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .vb-header-status {
+      font-size: .72rem;
+      color: var(--villab-orange);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .vb-status-dot {
+      width: 7px;
+      height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    #vb-close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(255,255,255,0.45);
+      font-size: 20px;
+      line-height: 1;
+      padding: 4px;
+      transition: color .2s;
+      font-family: "Poppins", sans-serif;
+    }
+    #vb-close-btn:hover { color: #fff; }
+
+    /* --- Messaggi --- */
+    #vb-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(243,154,30,0.25) transparent;
+    }
+    #vb-messages::-webkit-scrollbar { width: 4px; }
+    #vb-messages::-webkit-scrollbar-thumb {
+      background: rgba(243,154,30,0.3);
+      border-radius: 4px;
+    }
+    .vb-msg {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      animation: vbFadeUp .3s ease both;
+    }
+    @keyframes vbFadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .vb-msg-bot { justify-content: flex-start; }
+    .vb-msg-bot .vb-bubble {
+      background: rgba(30,90,137,0.35);
+      border: 1px solid rgba(243,154,30,0.15);
+      border-radius: 18px 18px 18px 4px;
+      color: #fff;
+      padding: 11px 15px;
+      font-size: .87rem;
+      line-height: 1.6;
+      max-width: 82%;
+      white-space: pre-line;
+    }
+    .vb-msg-bot .vb-bubble a { color: var(--villab-orange); }
+    .vb-mini-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--villab-orange);
+      flex-shrink: 0;
+    }
+    .vb-msg-user { justify-content: flex-end; }
+    .vb-msg-user .vb-bubble {
+      background: var(--villab-orange);
+      border-radius: 18px 18px 4px 18px;
+      color: var(--primary-blue);
+      padding: 11px 15px;
+      font-size: .87rem;
+      font-weight: 600;
+      line-height: 1.5;
+      max-width: 78%;
+    }
+
+    /* Typing */
+    .vb-typing .vb-bubble {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 16px;
+    }
+    .vb-typing-dot {
+      width: 7px;
+      height: 7px;
+      background: rgba(255,255,255,0.55);
+      border-radius: 50%;
+      animation: vbBounce 1.1s infinite ease-in-out;
+    }
+    .vb-typing-dot:nth-child(2) { animation-delay:.18s; }
+    .vb-typing-dot:nth-child(3) { animation-delay:.36s; }
+    @keyframes vbBounce {
+      0%,80%,100% { transform:translateY(0); opacity:.45; }
+      40%         { transform:translateY(-6px); opacity:1; }
+    }
+    .vb-typing-text {
+      font-size: .8rem;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+      margin-left: 4px;
+    }
+
+    /* --- Opzioni --- */
+    #vb-options {
+      padding: 10px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(243,154,30,0.1);
+    }
+    .vb-opt-btn {
+      background: rgba(14,53,88,0.6);
+      border: 1px solid rgba(243,154,30,0.25);
+      border-radius: 50px;
+      color: #fff;
+      font-family: "Poppins", sans-serif;
+      font-size: .82rem;
+      font-weight: 500;
+      padding: 9px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: background .2s, border-color .2s, transform .15s;
+    }
+    .vb-opt-btn:hover {
+      background: rgba(243,154,30,0.15);
+      border-color: var(--villab-orange);
+      transform: translateX(3px);
+    }
+    .vb-opt-btn:active { transform: scale(0.97); }
+
+    @media (max-width: 480px) {
+      #vb-window { width: calc(100vw - 22px); right: 11px; bottom: 96px; }
+      #vb-fab    { bottom: 16px; right: 14px; width: 60px; height: 60px; }
+    }
+  </style>
+
+  <!-- FAB -->
+  <button id="vb-fab" aria-label="Apri chatbot Villab">
+    <img src="images/IconaChatbot.png" alt="Villab Bot" />
+  </button>
+
+  <!-- Finestra chat -->
+  <div id="vb-window" role="dialog" aria-label="Chat Villab">
+    <div id="vb-header">
+      <img id="vb-avatar" src="images/IconaChatbot.png" alt="Villab Bot" />
+      <div class="vb-header-info">
+        <div class="vb-header-name">Assistente Villab</div>
+        <div class="vb-header-status"><span class="vb-status-dot"></span>Online</div>
+      </div>
+      <button id="vb-close-btn" aria-label="Chiudi chat">✕</button>
+    </div>
+    <div id="vb-messages"></div>
+    <div id="vb-options"></div>
+  </div>
+
+  <script>
+  (function () {
+    /* ---- DECISION TREE ---- */
+    var TREE = {
+      home: {
+        bot: "👋 Ciao! Sono l'assistente di Villab, felice di aiutarti! Cosa vuoi sapere?",
+        options: [
+          { label: "🏛️ Cos'è Villab",      next: "cose" },
+          { label: "ℹ️ Info pratiche",      next: "info" },
+          { label: "🎯 Servizi e attività", next: "servizi" }
+        ]
+      },
+      cose: {
+        bot: "Villab è un'aula studio e centro giovani pensato per ragazzi tra i 18 e i 35 anni. Uno spazio accogliente dove studiare, lavorare, creare connessioni e stare bene insieme! 🌟",
+        options: [
+          { label: "📚 Spazio studio",      next: "spazioStudio" },
+          { label: "🤝 Community",          next: "community" },
+          { label: "🎂 Limite di età",      next: "limiteEta" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      limiteEta: {
+        bot: "Villab è dedicato ai giovani tra i 18 e i 35 anni. Questa fascia è stata scelta per creare uno spazio su misura per studenti, neolaureati e giovani lavoratori. Se hai dubbi sulla tua situazione, scrivici: saremo felici di chiarire! 😊",
+        options: [
+          { label: "📲 Come registrarsi",   next: "badge" },
+          { label: "💸 È gratuito?",        next: "gratuito" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      spazioStudio: {
+        bot: "Un ambiente tranquillo e ben attrezzato, con postazioni comode, Wi-Fi veloce e prese ovunque. Tutto quello che ti serve per studiare al meglio! 📖✨",
+        options: [
+          { label: "💡 Servizi",            next: "servizi" },
+          { label: "📅 Prenotazione",       next: "prenotazione" },
+          { label: "🍕 Posso mangiare?",    next: "mangiare" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      community: {
+        bot: "Villab non è solo studio! È un luogo vivo, fatto di incontri, idee nuove e relazioni tra giovani del territorio. Potresti trovare il tuo prossimo amico o collaboratore qui! 🤝",
+        options: [
+          { label: "🎉 Socializzare",       next: "socializzare" },
+          { label: "💬 Contatti",           next: "contatti" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      info: {
+        bot: "Certo! Ecco le informazioni pratiche su Villab. Di cosa hai bisogno?",
+        options: [
+          { label: "🕐 Orari apertura",     next: "orari" },
+          { label: "🔑 Come accedere",      next: "accesso" },
+          { label: "💸 È gratuito?",        next: "gratuito" },
+          { label: "📍 Dove siamo",         next: "dove" },
+          { label: "♿ Accessibilità",       next: "accessibilita" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      orari: {
+        bot: "Villab è aperto tutti i giorni dalle 7:00 alle 24:00. Tanti orari per adattarsi ai tuoi ritmi! ⏰",
+        options: [
+          { label: "🌙 Posso venire la sera?", next: "sera" },
+          { label: "📅 Giorni di apertura",    next: "giorni" },
+          { label: "🔙 Torna all'inizio",      next: "home" }
+        ]
+      },
+      sera: {
+        bot: "Assolutamente sì! Villab è accessibile fino a mezzanotte. Perfetto per chi studia la sera o vuole incontrarsi dopo il lavoro. 🌙",
+        options: [
+          { label: "🔑 Come accedere",      next: "accesso" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      giorni: {
+        bot: "Villab è aperto 7 giorni su 7, weekend incluso. Non ti lasciamo mai senza uno spazio dove stare! 🎉",
+        options: [
+          { label: "🕐 Orari precisi",      next: "orari" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      accesso: {
+        bot: "Accedere a Villab è semplicissimo! Ti basta il badge digitale, poi puoi entrare dalla scala esterna o dall'ascensore. 🔑",
+        options: [
+          { label: "📲 Come ottenere il badge", next: "badge" },
+          { label: "🚪 Modalità ingresso",      next: "ingresso" },
+          { label: "♿ Accessibilità",           next: "accessibilita" },
+          { label: "🔙 Torna all'inizio",       next: "home" }
+        ]
+      },
+      badge: {
+        bot: "Richiedere il badge è facilissimo! Puoi farlo online compilando il modulo sul sito, scansionando il QR code oppure passando direttamente al Comune di Villa Carcina. 📲",
+        options: [
+          { label: "💸 È gratuito?",        next: "gratuito" },
+          { label: "📅 Prenotazione",       next: "prenotazione" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      ingresso: {
+        bot: "Hai due opzioni per entrare:
+🚪 Scala esterna — sempre disponibile negli orari di apertura.
+🛗 Ascensore — disponibile durante gli orari della biblioteca comunale.",
+        options: [
+          { label: "♿ Accessibilità",       next: "accessibilita" },
+          { label: "🕐 Orari apertura",     next: "orari" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      accessibilita: {
+        bot: "Sì, Villab è accessibile anche a persone con disabilità motorie! 🙌 È disponibile l'ascensore per raggiungere la mansarda durante gli orari della biblioteca. Per qualsiasi esigenza specifica, non esitare a contattarci: faremo il possibile per aiutarti!",
+        options: [
+          { label: "🚪 Modalità ingresso",  next: "ingresso" },
+          { label: "💬 Contattaci",         next: "contatti" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      parcheggio: {
+        bot: "Certo! Nelle vicinanze della biblioteca di Villa Carcina sono disponibili parcheggi pubblici gratuiti. Puoi arrivare tranquillamente in auto! 🚗",
+        options: [
+          { label: "🗺️ Indirizzo",          next: "indirizzo" },
+          { label: "🔑 Come accedere",      next: "accesso" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      gratuito: {
+        bot: "Ottima notizia: Villab è completamente gratuito o agevolato per chi è in possesso del badge! Studiare bene non deve costare. 🎓",
+        options: [
+          { label: "🪪 Serve la tessera?",  next: "tessera" },
+          { label: "💡 Cosa include",       next: "cosaInclude" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      tessera: {
+        bot: "Sì, occorre registrarsi per ottenere il badge. Ma tranquillo/a: la registrazione è semplice, rapida e gratuita. Puoi farlo online in pochi minuti! 😊",
+        options: [
+          { label: "📲 Come ottenere il badge", next: "badge" },
+          { label: "🔙 Torna all'inizio",       next: "home" }
+        ]
+      },
+      cosaInclude: {
+        bot: "Con il badge hai accesso a tutto: spazi studio, Wi-Fi veloce, prese elettriche e tutti i servizi base di Villab. Niente brutte sorprese! ✅",
+        options: [
+          { label: "💡 Tutti i servizi",    next: "servizi" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      dove: {
+        bot: "Ci trovi nella mansarda della biblioteca comunale di Villa Carcina. Una posizione comoda e facilmente raggiungibile! 📍",
+        options: [
+          { label: "🗺️ Indirizzo",          next: "indirizzo" },
+          { label: "🏛️ Posizione interna",  next: "posizioneInterna" },
+          { label: "🚗 Parcheggio vicino?", next: "parcheggio" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      indirizzo: {
+        bot: "📍 Via XX Settembre, 22 – Villa Carcina (BS)
+
+Se vuoi indicazioni stradali, puoi cercarlo su Google Maps!",
+        options: [
+          { label: "🚗 Parcheggio vicino?", next: "parcheggio" },
+          { label: "🏛️ Posizione interna",  next: "posizioneInterna" },
+          { label: "🔑 Come accedere",      next: "accesso" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      posizioneInterna: {
+        bot: "Villab si trova nella mansarda della biblioteca comunale. Puoi raggiungerci tramite la scala esterna (sempre disponibile) o l'ascensore (disponibile negli orari della biblioteca). 🏛️",
+        options: [
+          { label: "🚪 Modalità ingresso",  next: "ingresso" },
+          { label: "🚗 Parcheggio vicino?", next: "parcheggio" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      servizi: {
+        bot: "Villab è attrezzato per farti lavorare e studiare al meglio! Trovi Wi-Fi veloce, prese elettriche, sale riunioni e una bacheca informativa. 💡",
+        options: [
+          { label: "📶 Wi-Fi e postazioni", next: "wifi" },
+          { label: "🏛️ Spazi disponibili",  next: "spazi" },
+          { label: "📋 Sale riunioni",       next: "saleRiunioni" },
+          { label: "🎉 Socializzare",        next: "socializzare" },
+          { label: "🍕 Posso mangiare?",    next: "mangiare" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      mangiare: {
+        bot: "Certo, puoi portare da mangiare e da bere! 🍕☕ Villab è uno spazio giovane e informale: sentiti libero/a di fare una pausa come si deve. Ti chiediamo solo di mantenere gli spazi puliti e ordinati per tutti. Grazie! 🙏",
+        options: [
+          { label: "🏛️ Spazi disponibili",  next: "spazi" },
+          { label: "💡 Altri servizi",      next: "servizi" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      wifi: {
+        bot: "Connessione Wi-Fi veloce e prese elettriche in tutti gli spazi studio. Porta il tuo dispositivo e sei pronto/a a partire! 💻⚡",
+        options: [
+          { label: "🏛️ Spazi disponibili",  next: "spazi" },
+          { label: "📅 Prenotazione",       next: "prenotazione" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      spazi: {
+        bot: "Villab mette a disposizione spazi diversi per ogni momento della giornata:
+📖 Area studio silenziosa
+☕ Area relax
+🎤 Spazi per eventi e attività",
+        options: [
+          { label: "📋 Sale riunioni",      next: "saleRiunioni" },
+          { label: "🎉 Socializzare",       next: "socializzare" },
+          { label: "🍕 Posso mangiare?",   next: "mangiare" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      prenotazione: {
+        bot: "I posti sono solitamente liberi, ma puoi prenotare online per avere la certezza del tuo spazio. Meglio non rischiare nei giorni di punta! 📅",
+        options: [
+          { label: "💻 Come prenotare",    next: "comePrenotare" },
+          { label: "🪑 Posti disponibili", next: "posti" },
+          { label: "🔙 Torna all'inizio",  next: "home" }
+        ]
+      },
+      comePrenotare: {
+        bot: "La prenotazione è semplice e veloce! Puoi farlo direttamente online sul sito di Villab oppure contattandoci via WhatsApp o Instagram. 📲",
+        options: [
+          { label: "💬 Contatti",           next: "contatti" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      posti: {
+        bot: "Di solito trovi posto senza problemi! In caso di grande affluenza potrebbe essere necessaria la prenotazione anticipata, ma ti avvisiamo sempre attraverso i nostri canali. 🪑",
+        options: [
+          { label: "📅 Come prenotare",     next: "comePrenotare" },
+          { label: "📸 Seguici su IG",      next: "instagram" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      socializzare: {
+        bot: "A Villab organizziamo serate, giochi da tavolo e workshop per incontrare nuove persone e divertirsi insieme! Vieni a scoprire chi siamo. 🎉",
+        options: [
+          { label: "🎲 Tipi di eventi",     next: "eventi" },
+          { label: "🤝 Networking",         next: "networking" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      eventi: {
+        bot: "Il nostro calendario è ricco di appuntamenti:
+🎬 Serate cinema
+🎲 Giochi da tavolo
+🎤 Workshop e incontri tematici
+
+Seguici su Instagram per non perderti nulla!",
+        options: [
+          { label: "📸 Instagram",          next: "instagram" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      networking: {
+        bot: "Villab è il posto perfetto per conoscere altri giovani del territorio, collaborare su progetti e creare nuove opportunità. Non sai mai chi potresti incontrare! 🤝✨",
+        options: [
+          { label: "💬 Contattaci",         next: "contatti" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      saleRiunioni: {
+        bot: "Le sale riunioni sono prenotabili su richiesta e sono perfette per gruppi studio, team e associazioni. Uno spazio tutto vostro! 🏛️",
+        options: [
+          { label: "👥 Per chi sono",       next: "perChiRiunioni" },
+          { label: "📅 Come prenotare",     next: "prenotaRiunione" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      perChiRiunioni: {
+        bot: "Le sale sono pensate per gruppi studio, team di lavoro, associazioni giovanili e piccoli progetti condivisi. Se avete bisogno di uno spazio tranquillo per ragionare insieme, siete nel posto giusto! 👥",
+        options: [
+          { label: "📅 Come prenotare",     next: "prenotaRiunione" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      prenotaRiunione: {
+        bot: "Per prenotare una sala riunioni contattaci via WhatsApp o Instagram. Ti risponderemo al più presto e troveremo la soluzione giusta per te! 😊",
+        options: [
+          { label: "📱 WhatsApp",           next: "whatsapp" },
+          { label: "📸 Instagram",          next: "instagram" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      contatti: {
+        bot: "Siamo sempre raggiungibili e felici di rispondere! Scegli il canale che preferisci. 😊",
+        options: [
+          { label: "📱 WhatsApp",           next: "whatsapp" },
+          { label: "📸 Instagram",          next: "instagram" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      whatsapp: {
+        bot: "Scrivici su WhatsApp, ti rispondiamo velocemente!
+📱 +39 320 696 6688
+
+Siamo disponibili tutti i giorni. 🙂",
+        options: [
+          { label: "📸 Instagram",          next: "instagram" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      },
+      instagram: {
+        bot: "Seguici su Instagram per restare aggiornato/a su eventi, novità e tutto quello che succede da Villab!
+📸 @villab_villacarcina",
+        options: [
+          { label: "📱 WhatsApp",           next: "whatsapp" },
+          { label: "🔙 Torna all'inizio",   next: "home" }
+        ]
+      }
+    };
+
+    var fab      = document.getElementById('vb-fab');
+    var win      = document.getElementById('vb-window');
+    var messages = document.getElementById('vb-messages');
+    var options  = document.getElementById('vb-options');
+    var closeBtn = document.getElementById('vb-close-btn');
+    var isWaiting = false;
+    var initialized = false;
+
+    fab.addEventListener('click', function () {
+      var isOpen = win.classList.contains('open');
+      if (isOpen) {
+        win.classList.remove('open');
+        fab.classList.remove('open');
+      } else {
+        win.classList.add('open');
+        fab.classList.add('open');
+        if (!initialized) { initialized = true; goToNode('home'); }
+      }
     });
-</script>
+
+    closeBtn.addEventListener('click', function () {
+      win.classList.remove('open');
+      fab.classList.remove('open');
+    });
+
+    function makeAvatar() {
+      var img = document.createElement('img');
+      img.className = 'vb-mini-avatar';
+      img.src = 'images/IconaChatbot.png';
+      img.alt = '';
+      return img;
+    }
+
+    function addBotMessage(text, onDone) {
+      var row = document.createElement('div');
+      row.className = 'vb-msg vb-msg-bot';
+      row.appendChild(makeAvatar());
+      var bubble = document.createElement('div');
+      bubble.className = 'vb-bubble';
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      scrollDown();
+
+      var i = 0;
+      var speed = 35;
+      function typeNext() {
+        if (i < text.length) {
+          if (text[i] === '
+') {
+            bubble.appendChild(document.createElement('br'));
+          } else {
+            bubble.appendChild(document.createTextNode(text[i]));
+          }
+          i++;
+          scrollDown();
+          setTimeout(typeNext, speed);
+        } else {
+          if (typeof onDone === 'function') onDone();
+        }
+      }
+      typeNext();
+    }
+
+    function addUserMessage(text) {
+      var row = document.createElement('div');
+      row.className = 'vb-msg vb-msg-user';
+      var bubble = document.createElement('div');
+      bubble.className = 'vb-bubble';
+      bubble.textContent = text;
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      scrollDown();
+    }
+
+    function addTyping() {
+      var row = document.createElement('div');
+      row.className = 'vb-msg vb-msg-bot vb-typing';
+      row.id = 'vb-typing';
+      row.appendChild(makeAvatar());
+      var bubble = document.createElement('div');
+      bubble.className = 'vb-bubble';
+      bubble.innerHTML = '<span class="vb-typing-dot"></span><span class="vb-typing-dot"></span><span class="vb-typing-dot"></span><span class="vb-typing-text">Sto pensando…</span>';
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      scrollDown();
+    }
+
+    function removeTyping() {
+      var el = document.getElementById('vb-typing');
+      if (el) el.remove();
+    }
+
+    function renderOptions(opts) {
+      options.innerHTML = '';
+      opts.forEach(function (opt) {
+        var btn = document.createElement('button');
+        btn.className = 'vb-opt-btn';
+        btn.textContent = opt.label;
+        btn.addEventListener('click', function () { handleChoice(opt.label, opt.next); });
+        options.appendChild(btn);
+      });
+    }
+
+    function handleChoice(label, next) {
+      if (isWaiting) return;
+      isWaiting = true;
+      addUserMessage(label);
+      options.innerHTML = '';
+      addTyping();
+      setTimeout(function () {
+        removeTyping();
+        goToNode(next);
+      }, 1800);
+    }
+
+    function goToNode(nodeId) {
+      var node = TREE[nodeId];
+      if (!node) return;
+      /* mostra i pulsanti solo quando il typewriter ha finito */
+      addBotMessage(node.bot, function () {
+        renderOptions(node.options);
+        isWaiting = false;
+      });
+    }
+
+    function scrollDown() {
+      messages.scrollTop = messages.scrollHeight;
+    }
+  })();
+  </script>
 </body>
 </html>
